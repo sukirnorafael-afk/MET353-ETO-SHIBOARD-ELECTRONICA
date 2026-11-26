@@ -1,0 +1,1245 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+</head>
+<body>
+<title>Smartbook MET-353</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap">
+<style>
+/* Konsep: buku rujukan kapal. Sampul bergaya panel instrumen, isi bergaya manual teknik dengan alat interaktif di sela teks. */
+:root{
+  --bg:#07111f; --bg2:#0c1b30; --bg3:#12294a; --hero:#0b2140;
+  --line:#21436b; --grid:rgba(41,211,232,.07);
+  --fg:#e7eff9; --muted:#9bb0c9;
+  --cyan:#2bd6ea; --gold:#e9b64e;
+  --ok:#47d49a; --warn:#f2a83f; --bad:#f56a57;
+  --onacc:#06121f;
+  --font-display:'Orbitron','Barlow Condensed',system-ui,sans-serif;
+  --font-head:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;
+  --font-body:'Barlow',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'Share Tech Mono',ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f2f6fb; --bg2:#ffffff; --bg3:#e4edf7; --hero:#dbe8f6;
+    --line:#bccfe3; --grid:rgba(0,98,120,.08);
+    --fg:#0d2038; --muted:#46607e;
+    --cyan:#006f82; --gold:#8a5a00;
+    --ok:#12754b; --warn:#935300; --bad:#b0301e;
+    --onacc:#ffffff; color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#f2f6fb; --bg2:#ffffff; --bg3:#e4edf7; --hero:#dbe8f6;
+  --line:#bccfe3; --grid:rgba(0,98,120,.08);
+  --fg:#0d2038; --muted:#46607e;
+  --cyan:#006f82; --gold:#8a5a00;
+  --ok:#12754b; --warn:#935300; --bad:#b0301e;
+  --onacc:#ffffff; color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.65;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--cyan)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+h1,h2,h3,h4{margin:0;text-wrap:balance}
+p{margin:0 0 1em}
+ul,ol{margin:0;padding:0;list-style:none}
+.mono{font-family:var(--font-mono)}
+.read{max-width:68ch}
+strong{font-weight:600}
+
+/* Sampul */
+.hero{margin-top:calc(-1 * env(safe-area-inset-top,0px));padding-top:calc(env(safe-area-inset-top,0px) + 44px);padding-bottom:56px;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),linear-gradient(180deg,var(--hero),var(--bg));
+  background-size:32px 32px,32px 32px,100% 100%;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--font-mono);font-size:.82rem;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);margin-bottom:18px}
+.hero h1{font-family:var(--font-display);font-weight:900;font-size:clamp(3rem,13vw,7rem);line-height:1;letter-spacing:.03em}
+.hero h1 .dash{color:var(--gold)}
+.hero .sub{font-family:var(--font-display);font-weight:500;font-size:clamp(.85rem,2.6vw,1.15rem);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:14px}
+.hero .title{font-family:var(--font-head);font-weight:600;font-size:clamp(1.3rem,3.6vw,1.9rem);line-height:1.25;margin-top:26px;max-width:32ch}
+.hero .lead{color:var(--muted);max-width:60ch;margin-top:16px}
+.motto{font-family:var(--font-head);font-weight:600;font-size:1.25rem;letter-spacing:.03em;color:var(--gold);margin-top:18px}
+.author{margin-top:26px;display:inline-flex;flex-direction:column;gap:2px;padding:12px 16px;border:1px solid var(--line);border-radius:4px;background:var(--bg2)}
+.author small{font-family:var(--font-mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.author strong{font-family:var(--font-head);font-size:1.4rem;font-weight:700;letter-spacing:.02em}
+.motif{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:36px}
+.motif div{border:1px solid var(--line);background:var(--bg2);border-radius:4px;padding:14px 16px;display:flex;align-items:center;gap:14px}
+.motif b{font-family:var(--font-display);font-size:2.2rem;color:var(--gold);line-height:1}
+.motif span{font-family:var(--font-head);font-weight:600;font-size:1.1rem;line-height:1.2}
+
+/* Pendahuluan */
+.label{font-family:var(--font-mono);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.intro{padding-top:56px;scroll-margin-top:12px}
+.intro h2,.bab-head h2{font-family:var(--font-head);font-weight:700;font-size:clamp(1.9rem,5.5vw,2.8rem);line-height:1.1}
+.why{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:20px 0}
+.aud{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.m5{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:14px 0}
+.m5 div{border:1px solid var(--line);border-radius:4px;background:var(--bg2);padding:12px 14px;font-size:.95rem}
+.m5 b{display:block;font-family:var(--font-head);font-size:1.1rem;color:var(--cyan)}
+.toc{padding-block:48px 8px}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-top:14px}
+.toc-grid a{display:flex;gap:12px;align-items:baseline;padding:12px 14px;border:1px solid var(--line);border-radius:4px;background:var(--bg2);text-decoration:none;color:var(--fg);transition:border-color .15s}
+.toc-grid a:hover{border-color:var(--cyan)}
+.toc-grid .k{font-family:var(--font-mono);font-size:.8rem;color:var(--cyan);min-width:4.6em}
+.toc-grid .t{font-family:var(--font-head);font-weight:600;font-size:1.08rem;line-height:1.25}
+.sign{font-family:var(--font-head);font-weight:700;font-size:1.3rem;margin-top:8px}
+
+/* Bab */
+section.bab{padding-top:64px;scroll-margin-top:12px}
+.bab-head{display:flex;flex-direction:column;gap:6px;margin-bottom:20px;border-top:1px solid var(--line);padding-top:22px}
+.bab-head .back{font-family:var(--font-mono);font-size:.75rem;color:var(--muted);text-decoration:none;align-self:flex-start}
+.bab-head .back:hover{color:var(--cyan)}
+h3.sub3{font-family:var(--font-head);font-weight:700;font-size:1.5rem;margin:34px 0 10px}
+
+/* Komponen umum */
+.note{border:1px solid var(--line);background:var(--bg2);border-radius:4px;padding:14px 16px 12px;margin:20px 0;max-width:74ch}
+.note .label{display:block;margin-bottom:6px}
+.note p:last-child{margin-bottom:0}
+.note.goal .label{color:var(--cyan)}
+.note.imp .label{color:var(--warn)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:18px 0}
+.card{border:1px solid var(--line);background:var(--bg2);border-radius:4px;padding:18px;min-width:0}
+.card h3,.card h4{font-family:var(--font-head);font-weight:700;font-size:1.35rem;line-height:1.2;margin:6px 0 8px}
+.card p{color:var(--muted);margin:0 0 .6em}
+.card p:last-child{margin-bottom:0}
+.card .big{font-family:var(--font-display);font-size:2.4rem;font-weight:900;color:var(--gold);line-height:1}
+.card .qk{margin-top:10px;font-size:.93rem;color:var(--fg)}
+.card .qk b{font-family:var(--font-mono);font-weight:400;color:var(--cyan);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;display:block}
+.tag{display:inline-block;font-family:var(--font-mono);font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border:1px solid var(--line);border-radius:3px;color:var(--cyan);background:var(--bg3)}
+.bullets li{position:relative;padding-left:16px;margin:6px 0}
+.bullets li::before{content:"";position:absolute;left:0;top:.7em;width:6px;height:2px;background:var(--cyan)}
+.ex{font-family:var(--font-mono);font-size:.92rem;color:var(--muted);margin-top:8px}
+.ex b{color:var(--gold);font-weight:400}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:14px 0}
+.flow .arr{color:var(--gold);font-family:var(--font-mono)}
+.era{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:18px 0}
+.era .card:nth-child(3){border-color:var(--gold)}
+.pairs{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;margin:14px 0}
+.pairs div{border:1px solid var(--line);border-radius:4px;background:var(--bg2);padding:10px 14px}
+.pairs b{font-family:var(--font-head);font-size:1.08rem;color:var(--cyan)}
+.num{display:grid;gap:8px;margin:12px 0;counter-reset:n}
+.num li{counter-increment:n;display:grid;grid-template-columns:2.2em 1fr;gap:6px;max-width:72ch}
+.num li::before{content:counter(n);font-family:var(--font-mono);color:var(--gold)}
+
+/* Peta induk */
+.map{border:1px solid var(--line);border-radius:4px;background:var(--bg2);padding:16px;margin:20px 0;display:grid;gap:16px}
+.map .row{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:start}
+.map .row .lb{font-family:var(--font-mono);font-size:.8rem;letter-spacing:.1em;color:var(--gold);padding-top:8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--font-head);font-weight:600;font-size:1.02rem;padding:6px 12px;border:1px solid var(--line);border-radius:3px;background:var(--bg3)}
+.chip.s{position:relative}
+.chip.s::before{content:attr(data-n);font-family:var(--font-mono);color:var(--cyan);margin-right:8px;font-size:.85rem}
+@media (max-width:560px){.map .row{grid-template-columns:1fr;gap:4px}.map .row .lb{padding-top:0}}
+
+/* Penjelajah tahap */
+.stagetabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:20px 0 12px}
+.stagebtn{font:inherit;text-align:left;padding:10px 12px;border:1px solid var(--line);border-bottom:3px solid var(--line);border-radius:4px;background:var(--bg2);color:var(--fg);cursor:pointer}
+.stagebtn .n{font-family:var(--font-mono);font-size:.78rem;color:var(--cyan)}
+.stagebtn .nm{display:block;font-family:var(--font-head);font-weight:700;font-size:1.1rem;letter-spacing:.03em;line-height:1.2}
+.stagebtn .sb{display:block;font-size:.82rem;color:var(--muted);line-height:1.3}
+.stagebtn[aria-selected="true"]{background:var(--bg3);border-color:var(--cyan);border-bottom-color:var(--gold)}
+.stagepanel{border:1px solid var(--line);border-radius:4px;background:var(--bg2);padding:18px}
+.stagepanel h3{font-family:var(--font-head);font-weight:700;font-size:1.7rem;line-height:1.1}
+.stagepanel h3 small{font-family:var(--font-body);font-weight:400;font-size:1rem;color:var(--muted);margin-left:8px}
+.stagepanel .role{margin:10px 0 16px;max-width:70ch}
+.cols3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.col h4{font-family:var(--font-mono);font-size:.78rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.col li{padding:6px 0;border-top:1px solid var(--line);font-size:.96rem}
+.rowtwo{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:16px}
+.rowtwo>div{background:var(--bg3);border-radius:4px;padding:12px 14px;font-size:.95rem}
+.rowtwo .label{display:block;margin-bottom:4px;color:var(--cyan)}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:4px;background:var(--bg2);margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+table.master{min-width:920px}
+table.tbl{min-width:560px}
+th{font-family:var(--font-head);font-size:1rem;letter-spacing:.03em;text-align:left;padding:10px 12px;background:var(--bg3);border-bottom:1px solid var(--line);vertical-align:bottom}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td ul li{padding:2px 0}
+th small{font-family:var(--font-body);font-weight:400;color:var(--muted)}
+table.master .st{font-family:var(--font-head);font-weight:700;font-size:1.05rem;white-space:nowrap}
+table.master .st small{display:block;font-family:var(--font-body);font-weight:400;font-size:.82rem;color:var(--muted)}
+td.k{font-family:var(--font-mono);color:var(--gold);white-space:nowrap}
+
+/* Alat interaktif */
+.tool{border:1px solid var(--line);border-radius:4px;background:var(--bg2);padding:18px;margin:18px 0}
+.tool h4{font-family:var(--font-head);font-weight:700;font-size:1.25rem;margin-bottom:4px}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0}
+.fields label,.wsgrid label{display:flex;flex-direction:column;gap:4px;font-family:var(--font-mono);font-size:.78rem;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+.fields input,.fields select,.wsgrid textarea,.search,.scoregrid select{font:inherit;font-family:var(--font-mono);font-size:1rem;padding:8px 10px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--fg);width:100%;text-transform:none;letter-spacing:0}
+.wsgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:12px 0}
+.wsgrid textarea{min-height:72px;resize:vertical}
+.scoregrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin:12px 0}
+.scoregrid label{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid var(--line);border-radius:4px;background:var(--bg);padding:8px 10px;font-size:.95rem;text-transform:none;letter-spacing:0;font-family:var(--font-body);color:var(--fg)}
+.scoregrid select{width:6.2em;flex:none}
+.copyout{width:100%;min-height:140px;margin-top:10px;font-family:var(--font-mono);font-size:.9rem;padding:10px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--fg)}
+input[type=range]{width:100%;accent-color:var(--cyan)}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:12px}
+.readout div{background:var(--bg3);border-radius:4px;padding:10px 12px}
+.readout .v{font-family:var(--font-mono);font-size:1.6rem;color:var(--gold);line-height:1.2}
+.readout .l{font-family:var(--font-mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.status{margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:4px;font-size:.96rem}
+.status.ok{border-color:var(--ok)}
+.status.bad{border-color:var(--bad)}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.btn{font:inherit;font-family:var(--font-head);font-weight:600;font-size:1.02rem;padding:8px 14px;border:1px solid var(--line);border-radius:4px;background:var(--bg3);color:var(--fg);cursor:pointer}
+.btn[aria-pressed="true"]{background:var(--cyan);border-color:var(--cyan);color:var(--onacc)}
+.lanes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:8px}
+.lane{border:1px solid var(--line);border-radius:4px;padding:14px;background:var(--bg)}
+.lane .nm{font-family:var(--font-head);font-weight:700;font-size:1.15rem;line-height:1.2}
+.badge{display:inline-block;margin:8px 0 6px;font-family:var(--font-mono);font-size:.78rem;letter-spacing:.08em;padding:2px 8px;border-radius:3px;border:1px solid currentColor}
+.badge.aktif{color:var(--ok)}
+.badge.siaga{color:var(--muted)}
+.badge.gagal{color:var(--bad)}
+.badge.ambil{color:var(--warn)}
+.lane p{font-size:.92rem;color:var(--muted);margin:0}
+.scn{margin-top:10px;max-width:72ch}
+
+/* Checklist */
+.steps{display:grid;gap:12px;margin:18px 0}
+.step{display:grid;grid-template-columns:auto 1fr;gap:14px;border:1px solid var(--line);border-radius:4px;background:var(--bg2);padding:16px}
+.step input{width:24px;height:24px;margin-top:4px;accent-color:var(--cyan)}
+.step h3{font-family:var(--font-head);font-weight:700;font-size:1.3rem;line-height:1.2}
+.step p{margin:6px 0 0}
+.step .q{margin-top:8px;font-size:.93rem;color:var(--muted)}
+.step.done{border-color:var(--ok)}
+.progress{display:flex;align-items:center;gap:12px;margin:12px 0}
+.bar{flex:1;height:8px;border-radius:4px;background:var(--bg3);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--cyan);transition:width .25s}
+details{border:1px solid var(--line);border-radius:4px;background:var(--bg2);padding:12px 16px;margin:14px 0}
+summary{cursor:pointer;font-family:var(--font-head);font-weight:700;font-size:1.15rem}
+details[open] summary{margin-bottom:10px}
+details ol{padding-left:0}
+details li{margin:6px 0}
+
+/* Peta Maritime 5.0 */
+.rows5{display:grid;gap:10px;margin:18px 0}
+.r5{display:grid;grid-template-columns:1fr 1fr 1.5fr;gap:1px;border:1px solid var(--line);border-radius:4px;background:var(--line);overflow:hidden}
+.r5>div{background:var(--bg2);padding:14px;min-width:0}
+.r5 .l{display:block;font-family:var(--font-mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.r5 b{font-family:var(--font-head);font-size:1.12rem;font-weight:700}
+.r5 .new{background:var(--bg3)}
+@media (max-width:760px){.r5{grid-template-columns:1fr}}
+
+/* Kuis & glosarium */
+.quiz{display:grid;gap:14px;margin:18px 0}
+.qq{border:1px solid var(--line);border-radius:4px;background:var(--bg2);padding:16px}
+.qq h4{font-family:var(--font-head);font-weight:600;font-size:1.15rem;line-height:1.3;margin-bottom:10px}
+.qq h4 span{font-family:var(--font-mono);color:var(--cyan);margin-right:8px;font-weight:400}
+.opts-q{display:grid;gap:8px}
+.optq{font:inherit;text-align:left;padding:9px 12px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--fg);cursor:pointer}
+.optq:disabled{cursor:default}
+.optq.right{border-color:var(--ok)}
+.optq.wrong{border-color:var(--bad)}
+.fb{margin-top:10px;font-size:.93rem;color:var(--muted)}
+.fb b{color:var(--fg)}
+.score{font-family:var(--font-mono);font-size:1.1rem}
+.gl{margin:14px 0}
+.gl dt{font-family:var(--font-head);font-weight:700;font-size:1.1rem;color:var(--cyan);margin-top:14px}
+.gl dd{margin:2px 0 0;max-width:70ch}
+footer{margin-top:72px;padding-block:32px;border-top:1px solid var(--line);background:var(--bg2)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:space-between;align-items:baseline}
+footer strong{font-family:var(--font-head);font-size:1.2rem}
+footer small{color:var(--muted);display:block;max-width:64ch}
+
+/* Navigasi, popup, ilustrasi, sumber belajar */
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 96px)}
+section.bab,.intro{scroll-margin-top:96px}
+.hero{margin-top:0;padding-top:44px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:41;background:var(--bg2)}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--bg2);border-bottom:1px solid var(--line)}
+.topbar-in{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding-block:8px}
+.brand{font-family:var(--font-display);font-weight:700;letter-spacing:.06em;color:var(--fg);text-decoration:none;font-size:1rem}
+.brand span{color:var(--gold)}
+.topbtns{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}
+.tb{font:inherit;font-family:var(--font-head);font-weight:600;font-size:1rem;padding:5px 12px;border:1px solid var(--line);border-radius:4px;background:var(--bg3);color:var(--fg);cursor:pointer;text-decoration:none}
+.tb:hover{border-color:var(--cyan)}
+.chapnav{order:3;flex:1 1 100%;display:flex;gap:6px;overflow-x:auto;min-width:0;padding-bottom:2px;scrollbar-width:thin}
+.chapnav a{flex:none;font-family:var(--font-head);font-weight:600;font-size:.98rem;padding:3px 10px;border:1px solid var(--line);border-radius:3px;color:var(--fg);text-decoration:none;background:var(--bg3)}
+.chapnav a:hover{border-color:var(--cyan)}
+.chapnav a.on{background:var(--cyan);border-color:var(--cyan);color:var(--onacc)}
+.pop{position:fixed;inset:0;z-index:60;background:rgba(3,10,20,.72);display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;
+  padding:calc(env(safe-area-inset-top,0px) + 56px) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.pop-panel{background:var(--bg2);color:var(--fg);border:1px solid var(--line);border-radius:6px;width:min(820px,100%);padding:18px}
+.pop-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.pop-head h2{font-family:var(--font-head);font-weight:700;font-size:1.7rem}
+.pop-sec{padding:12px 0;border-top:1px solid var(--line)}
+.pop-sec h3{font-family:var(--font-head);font-weight:700;font-size:1.2rem;color:var(--gold);margin-bottom:4px}
+.lk{display:flex;flex-wrap:wrap;gap:6px}
+.lk a{font-family:var(--font-mono);font-size:.78rem;padding:4px 9px;border:1px solid var(--line);border-radius:3px;background:var(--bg3);color:var(--cyan);text-decoration:none}
+.lk a:hover{border-color:var(--cyan)}
+.res{border:1px solid var(--line);border-radius:4px;background:var(--bg2);padding:16px;margin-top:34px}
+.restopic{padding:10px 0;border-top:1px solid var(--line)}
+.res .label{display:block;margin-bottom:6px}
+.restopic b{display:block;font-family:var(--font-head);font-weight:700;font-size:1.08rem;margin-bottom:6px}
+.resnote{font-size:.88rem;color:var(--muted);margin:10px 0 0;max-width:72ch}
+.gl dd+dd{margin-top:6px}
+.proc{margin-top:14px;max-width:72ch}
+.proc .label{display:block;margin-bottom:6px;color:var(--cyan)}
+.fig{margin:20px 0}
+.fig svg{display:block;width:100%;min-width:720px;height:auto}
+.fig figcaption{font-size:.92rem;color:var(--muted);margin-top:8px;max-width:74ch}
+.sv-box{fill:var(--bg3);stroke:var(--line);stroke-width:1.5}
+.sv-hot{fill:var(--bg3);stroke:var(--cyan);stroke-width:1.5}
+.sv-gd{fill:var(--bg3);stroke:var(--gold);stroke-width:1.5}
+.sv-t{fill:var(--fg);font-family:var(--font-head);font-weight:700;font-size:15px}
+.sv-s{fill:var(--muted);font-family:var(--font-mono);font-size:11.5px}
+.sv-n{fill:var(--cyan);font-family:var(--font-mono);font-size:11px;letter-spacing:.08em}
+.sv-l{fill:var(--gold);font-family:var(--font-mono);font-size:12px;letter-spacing:.08em}
+.sv-ln{stroke:var(--cyan);stroke-width:2;fill:none}
+.sv-lg{stroke:var(--gold);stroke-width:2;fill:none}
+.sv-flow{stroke-dasharray:7 6;animation:svdash 1.1s linear infinite}
+.sv-arrow{fill:var(--gold)}
+.sv-zl{fill:none;stroke:var(--cyan);stroke-width:1.2;stroke-dasharray:4 4}
+.sv-zr{fill:none;stroke:var(--gold);stroke-width:1.2;stroke-dasharray:4 4}
+@keyframes svdash{to{stroke-dashoffset:-13}}
+</style>
+
+<nav class="topbar" aria-label="Navigasi buku">
+  <div class="wrap topbar-in">
+    <a class="brand" href="#atas">MET<span>-</span>353</a>
+    <div class="topbtns">
+      <button class="tb" type="button" id="btnToc" aria-haspopup="dialog">Daftar Isi</button>
+      <button class="tb" type="button" id="btnSrc" aria-haspopup="dialog">Sumber Belajar</button>
+      <button class="tb" type="button" id="btnTheme">Mode: Otomatis</button>
+    </div>
+    <div class="chapnav" id="chapnav"></div>
+  </div>
+</nav>
+
+<div class="pop" id="popToc" hidden role="dialog" aria-modal="true" aria-labelledby="popTocT">
+  <div class="pop-panel">
+    <div class="pop-head"><h2 id="popTocT">Daftar Isi</h2><button class="tb" type="button" data-close>Tutup</button></div>
+    <div class="toc-grid" id="tocList"></div>
+  </div>
+</div>
+<div class="pop" id="popSrc" hidden role="dialog" aria-modal="true" aria-labelledby="popSrcT">
+  <div class="pop-panel">
+    <div class="pop-head"><h2 id="popSrcT">Sumber Belajar</h2><button class="tb" type="button" data-close>Tutup</button></div>
+    <p class="read" style="color:var(--muted)">Foto, video, animasi, referensi Pinterest, Wikipedia, dan jurnal untuk setiap topik. Tautan membuka hasil pencarian di tab baru.</p>
+    <div id="srcList"></div>
+  </div>
+</div>
+
+<header class="hero" id="atas">
+  <div class="wrap">
+    <div class="eyebrow">Smartbook · Marine Electro-Technology · Edisi 1 · 2026</div>
+    <h1><span>MET</span><span class="dash">-</span><span>353</span></h1>
+    <div class="sub">Marine Electro-Technology 3-5-3</div>
+    <div class="title">Panduan Terpadu Elektronika, Otomasi, dan Keselamatan Kapal Niaga Menuju Maritime 5.0</div>
+    <p class="lead">Kerangka belajar baru yang menyatukan komponen mikro, perangkat kapal nyata, dan standar keselamatan dalam satu peta, dari meja praktikum sampai Engine Control Room.</p>
+    <div class="motto">Dari Sensor ke Layar, dari Layar ke Keselamatan.</div>
+    <div class="author"><small>Disusun oleh</small><strong>Rafael Sukirno, CE</strong></div>
+    <div class="motif">
+      <div><b>3</b><span>Domain Keilmuan</span></div>
+      <div><b>5</b><span>Tahap Alur Kerja</span></div>
+      <div><b>3</b><span>Jalur Eksekusi &amp; Keamanan</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section class="intro" id="mengapa">
+  <div class="label">Mengapa MET-353</div>
+  <h2>Kapal sudah menjadi satu sistem terpadu. Cara belajarnya harus ikut berubah.</h2>
+  <p class="read" style="margin-top:14px">Sensor, kontrol, daya, navigasi, komunikasi, alarm, dan pemantauan dari darat kini saling terhubung. Bila semuanya dipelajari terpisah, lulusan hafal nama komponen tetapi kesulitan melacak gangguan. MET-353 menutup jarak itu dengan satu peta yang bisa diingat dan dipakai langsung.</p>
+  <div class="why">
+    <div class="card"><span class="tag">Satu peta</span><h3>Tiga dunia dalam satu kerangka</h3><p>Komponen mikro (IC, MOSFET, Arduino, ESP32), perangkat kapal nyata (Marine PLC, VFD, MCC Box, ECDIS, GMDSS), dan regulasi keselamatan (SOLAS, IMO, STCW ETO, Marine Class) dibaca bersama.</p></div>
+    <div class="card"><span class="tag">Mudah diingat</span><h3>Tiga angka, satu metode</h3><p>3 Domain, 5 Tahap, 3 Jalur. Cukup untuk melacak gangguan dari sensor sampai layar, dan dari layar sampai pengaman.</p></div>
+    <div class="card"><span class="tag">Siap dipraktikkan</span><h3>Dari meja praktikum ke kamar mesin</h3><p>Setiap alat kampus dipasangkan dengan padanan kapalnya, lengkap dengan latihan fault injection yang aman.</p></div>
+    <div class="card"><span class="tag">Masa depan</span><h3>Dirancang untuk Maritime 5.0</h3><p>Energi hijau, digital twin, predictive AI, kapal semi-otonom, dan ketahanan siber punya titik tambat yang jelas di kerangka ini.</p></div>
+  </div>
+  <div class="label" style="margin-top:26px">Untuk siapa</div>
+  <div class="aud"><span class="chip">Taruna Teknika / ETO</span><span class="chip">Dosen dan instruktur bengkel</span><span class="chip">Perwira elektro-teknik kapal</span><span class="chip">Pengembang solusi Maritime 5.0</span></div>
+</section>
+
+<nav class="toc" aria-label="Daftar isi">
+  <div class="label">Daftar Isi</div>
+  <div class="toc-grid">
+    <a href="#pengantar"><span class="k">AWAL</span><span class="t">Kata Pengantar &amp; Cara Menggunakan</span></a>
+    <a href="#bab1"><span class="k">BAB 1</span><span class="t">Evolusi Elektronika Kapal Menuju Maritime 5.0</span></a>
+    <a href="#bab2"><span class="k">BAB 2</span><span class="t">Filosofi Arsitektur MET-353</span></a>
+    <a href="#bab3"><span class="k">BAB 3</span><span class="t">Lapisan Mikro ke Sistemik</span></a>
+    <a href="#bab4"><span class="k">BAB 4</span><span class="t">Elektronika Daya dan MCC Box</span></a>
+    <a href="#bab5"><span class="k">BAB 5</span><span class="t">Navigasi, GMDSS, Hazardous Area, dan Cyber Security</span></a>
+    <a href="#bab6"><span class="k">BAB 6</span><span class="t">Troubleshooting dan Fault Injection</span></a>
+    <a href="#bab7"><span class="k">BAB 7</span><span class="t">Masa Depan MET-353 di Era Maritime 5.0</span></a>
+    <a href="#lampiran-a"><span class="k">LAMP. A</span><span class="t">Tabel Master Integrasi 3-5-3</span></a>
+    <a href="#lampiran-b"><span class="k">LAMP. B</span><span class="t">Lembar Evaluasi Taruna</span></a>
+    <a href="#lampiran-c"><span class="k">LAMP. C</span><span class="t">Rubrik Penilaian</span></a>
+    <a href="#lampiran-d"><span class="k">LAMP. D</span><span class="t">Format Laporan Praktikum</span></a>
+    <a href="#lampiran-e"><span class="k">LAMP. E</span><span class="t">Glosarium</span></a>
+  </div>
+</nav>
+
+<section class="bab" id="pengantar">
+  <div class="bab-head"><span class="label">Kata Pengantar</span><h2>Dari papan praktikum ke keselamatan kapal</h2></div>
+  <p class="read">Elektronika kapal bukan sekadar rangkaian komponen di atas papan praktikum. Di kapal niaga, satu sinyal 4–20 mA yang salah dibaca dapat memicu alarm palsu; satu kontaktor yang gagal menutup dapat menghentikan pompa pendingin; dan satu jalur hardwired yang terputus dapat membahayakan nyawa serta mesin.</p>
+  <p class="read">Smartbook MET-353 disusun untuk menjembatani tiga dunia yang sering terpisah dalam pembelajaran: komponen mikro seperti IC, MOSFET, Arduino, dan ESP32; perangkat kapal nyata seperti PLC marine, VFD, MCC Box, ECDIS, dan GMDSS; serta regulasi dan keselamatan seperti SOLAS, IMO, STCW ETO, dan prinsip Marine Class.</p>
+  <p class="read">Metode 3-5-3 dipilih karena sederhana untuk diingat, tetapi cukup dalam untuk diajarkan: 3 Domain Keilmuan, 5 Tahap Alur Kerja, dan 3 Jalur Eksekusi &amp; Keamanan. Dengan metode ini, taruna tidak hanya belajar "membuat lampu menyala", tetapi belajar membaca alur energi dan sinyal dari mesin hingga layar, serta dari layar hingga aktuator dan sistem pengaman.</p>
+  <p class="read">MET-353 adalah kerangka pembelajaran yang dikembangkan oleh penyusun untuk membantu belajar dan menganalisis sistem. Kerangka ini bukan klasifikasi resmi yang diterbitkan IMO, STCW, SOLAS, IEC, IACS, atau badan klasifikasi. Gunakan buku ini bersama RPS, manual peralatan, gambar kapal, prosedur keselamatan, dan regulasi yang berlaku.</p>
+  <p class="read">Semoga smartbook ini menjadi pegangan praktis di kelas, bengkel, dan di atas kapal.</p>
+  <div class="sign">Rafael Sukirno, CE</div>
+
+  <h3 class="sub3">Cara Menggunakan Smartbook Ini</h3>
+  <p class="read">Setiap bab memuat capaian pembelajaran, konsep kunci, padanan kapal nyata, dan latihan. Bab praktis dilengkapi praktikum dan fault injection. Bab 6 memuat checklist diagnosis 3-5-3, dan Lampiran B memuat evaluasi. Lima alat interaktif tersedia di dalam bab: penjelajah 5 tahap, kalkulator 4–20 mA, simulator tiga jalur, checklist diagnosis, dan kuis.</p>
+  <div class="note"><span class="label">Aturan penting</span><p>Arduino/ESP32 di kampus berperan sebagai simulator otak PLC, bukan pengganti perangkat bersertifikat Marine Class. Di kapal nyata, chip mikrokontroler hadir sebagai embedded system di dalam transmitter, VFD, panel genset, dan perangkat GMDSS.</p></div>
+  <div class="cards">
+    <div class="card"><h4>Hasil belajar</h4><ul class="bullets"><li>Menjelaskan arsitektur dasar sistem elektronika dan otomasi kapal.</li><li>Mengidentifikasi komponen, simbol, sinyal, dan fungsi perangkat.</li><li>Membaca alur sensor, pemrosesan, aktuator, dan monitoring.</li><li>Membedakan kontrol program, hardwired, dan redundansi.</li><li>Melakukan diagnosis awal secara aman pada trainer tegangan rendah.</li><li>Menghubungkan hasil praktikum dengan prinsip desain dan operasi peralatan kapal.</li></ul></div>
+    <div class="card"><h4>Untuk dosen dan instruktur</h4><p>Istilah MET-353 dapat langsung dipakai pada kop Rencana Pembelajaran Semester (RPS), modul praktikum bengkel, dan judul penelitian terapan bersama taruna.</p></div>
+  </div>
+</section>
+
+<!-- BAB 1 -->
+<section class="bab" id="bab1">
+  <div class="bab-head"><span class="label">Bab 1</span><h2>Evolusi Elektronika Kapal Menuju Maritime 5.0</h2><a class="back" href="#atas">↑ kembali ke atas</a></div>
+  <div class="note goal"><span class="label">Capaian Pembelajaran</span><p>Taruna mampu menjelaskan pergeseran elektronika kapal dari sistem konvensional, otomatisasi, IoT, hingga Maritime 5.0, serta memahami mengapa ETO membutuhkan metode baru.</p></div>
+  <h3 class="sub3">1.1 Konsep Kunci</h3>
+  <div class="era">
+    <div class="card"><span class="tag">Era 1</span><h3>Kapal konvensional</h3><p>Kontrol manual, relay, dan indikator lokal.</p></div>
+    <div class="card"><span class="tag">Era 2 · Maritime 4.0</span><h3>Otomatisasi dan konektivitas</h3><p>Otomatisasi, PLC, SCADA, sensor digital, IoT, dan big data.</p></div>
+    <div class="card"><span class="tag">Era 3 · Maritime 5.0</span><h3>Manusia sebagai pusat kendali</h3><p>Ketahanan siber, efisiensi energi hijau, digital twin, prediksi kerusakan, dan kapal semi-otonom.</p></div>
+  </div>
+  <p class="read"><strong>Maritime 4.0</strong> berfokus pada otomatisasi penuh dan konektivitas mesin (<em>IoT &amp; Big Data</em>), sedangkan <strong>Maritime 5.0</strong> menekankan <strong>kolaborasi cerdas antara manusia dan mesin (<em>Human-Centric</em>), ketahanan siber (<em>Cyber Resilience</em>), serta efisiensi energi hijau (<em>Decarbonization</em>)</strong>.</p>
+  <h3 class="sub3">1.2 Mengapa ETO Butuh MET-353</h3>
+  <p class="read">ETO tidak cukup hanya bisa mengganti komponen. ETO harus mampu:</p>
+  <ol class="num"><li>Melacak sinyal dari sensor ke PLC.</li><li>Membedakan gangguan software dan hardwired.</li><li>Memahami batas antara arus lemah 24V DC dan arus kuat 440V AC.</li><li>Menjaga sistem cadangan agar tidak terjadi blackout.</li><li>Menghubungkan data kapal ke darat tanpa mengabaikan cyber security.</li></ol>
+  <h3 class="sub3">1.3 Latihan</h3>
+  <p class="read">Buat tabel perbandingan: alat di kampus, perangkat di kapal, dan risiko jika salah diagnosis.</p>
+</section>
+
+<!-- BAB 2 -->
+<section class="bab" id="bab2">
+  <div class="bab-head"><span class="label">Bab 2</span><h2>Filosofi Arsitektur MET-353</h2><a class="back" href="#atas">↑ kembali ke atas</a></div>
+  <div class="note goal"><span class="label">Capaian Pembelajaran</span><p>Taruna mampu menjelaskan dan menggunakan kerangka 3 Domain, 5 Tahap, 3 Jalur dalam membaca diagram dan melakukan diagnosis.</p></div>
+
+  <h3 class="sub3">2.1 Peta Induk 3-5-3</h3>
+  <p class="read">MET-353 (<em>Marine Electro-Technology 3-5-3</em>) dibangun di atas tiga fondasi utama yang wajib dikuasai setiap perwira elektro-teknik kapal (<em>Electro-Technical Officer</em> / ETO):</p>
+  <div class="cards">
+    <div class="card"><div class="big">3</div><h3>Domain Keilmuan</h3><p>Pengelompokan seluruh bidang teknis elektronika di atas kapal.</p><div class="qk"><b>Pertanyaan kunci</b>Bidang teknis apa yang sedang dipelajari?</div></div>
+    <div class="card"><div class="big">5</div><h3>Tahap Alur Kerja</h3><p>Rantai perjalanan sinyal dan energi dari fisik mesin hingga ke layar monitor dan aktuator.</p><div class="qk"><b>Pertanyaan kunci</b>Dari mana data berasal dan ke mana perintah bergerak?</div></div>
+    <div class="card"><div class="big">3</div><h3>Jalur Eksekusi &amp; Keamanan</h3><p>Sistem perlindungan berlapis berstandar <em>Class</em> dan SOLAS agar kapal tidak mengalami <em>blackout</em> atau tabrakan.</p><div class="qk"><b>Pertanyaan kunci</b>Apa yang terjadi jika kontrol utama gagal?</div></div>
+  </div>
+  <div class="map" role="img" aria-label="Peta induk: 3 domain, 5 tahap, 3 jalur">
+    <div class="row"><span class="lb">3 DOMAIN</span><div class="chips"><span class="chip">Automation &amp; Control</span><span class="chip">Power Electronics &amp; High Voltage</span><span class="chip">Navigation, Radio &amp; Marine Safety</span></div></div>
+    <div class="row"><span class="lb">5 TAHAP</span><div class="chips"><span class="chip s" data-n="1">Sensing</span><span class="chip s" data-n="2">Communication</span><span class="chip s" data-n="3">Processing</span><span class="chip s" data-n="4">Actuation &amp; Power</span><span class="chip s" data-n="5">Interface &amp; Fleet</span></div></div>
+    <div class="row"><span class="lb">3 JALUR</span><div class="chips"><span class="chip">Brain Command</span><span class="chip">Hardwired Loop</span><span class="chip">Dual Path / Redundancy</span></div></div>
+  </div>
+  <div class="note imp"><span class="label">Catatan Penting</span><p>Lima tahap adalah model pembelajaran yang disederhanakan. Pada sistem nyata, aliran data dapat dua arah, daya memiliki jalur tersendiri, dan fungsi keselamatan dapat bekerja independen atau terintegrasi sesuai desain.</p></div>
+
+  <h3 class="sub3">2.2 Tiga Domain Keilmuan (Cakupan Global STCW ETO)</h3>
+  <p class="read">Seluruh mata kuliah dan praktik kejuruan dikelompokkan ke dalam tiga payung keilmuan ini:</p>
+  <div class="cards">
+    <div class="card"><span class="tag">Domain 1</span><h3>Automation &amp; Control (Otomasi &amp; Kendali)</h3><p>Meliputi seluruh alur dari sensor, bus komunikasi industri, PLC, hingga layar SCADA/HMI.</p><p><b>Contoh perangkat:</b> Transmitter, Modbus, Marine PLC.</p><p><b>Contoh aplikasi:</b> kontrol level bilge, tekanan, temperatur, pompa, sistem pendingin, dan pemantauan mesin.</p></div>
+    <div class="card"><span class="tag">Domain 2</span><h3>Power Electronics &amp; High Voltage (Elektronika Daya &amp; Arus Kuat)</h3><p>Titik pertemuan (<em>perkawinan</em>) antara sinyal kontrol elektronika dengan panel daya <strong>MCC Box</strong> dan <strong>Main Switchboard</strong> (VFD, <em>Soft Starter</em>, AVR, <em>Rectifier</em>, UPS, hingga sistem <em>High Voltage</em> &gt;1.000V).</p><p><b>Contoh perangkat:</b> Kontaktor, IGBT, thyristor, inverter.</p></div>
+    <div class="card"><span class="tag">Domain 3</span><h3>Navigation, Radio &amp; Marine Safety (Navigasi, Komunikasi &amp; Keselamatan)</h3><p>Meliputi perangkat wajib aturan SOLAS: Radar, ECDIS, AIS, Gyrocompass, komunikasi satelit GMDSS, sistem deteksi kebakaran, serta peralatan bersertifikat anti-ledak (<em>Explosion Proof / Intrinsically Safe</em>).</p><p><b>Contoh perangkat:</b> Gyrocompass, VHF, EPIRB, detektor gas.</p></div>
+  </div>
+  <div class="note imp"><span class="label">Catatan Penting</span><p>Penerapan persyaratan SOLAS, STCW, aturan radio, dan persyaratan badan klasifikasi bergantung pada jenis kapal, ukuran, area operasi, tanggal pembangunan atau perubahan, serta aturan yang berlaku. Periksa dokumen resmi edisi terbaru.</p></div>
+  <div class="tool">
+    <h4>Latihan: gejala ini milik domain mana?</h4>
+    <p style="color:var(--muted);margin:0 0 6px">Pilih domain tempat gejala paling dulu diperiksa.</p>
+    <div id="domQ"></div>
+  </div>
+
+  <h3 class="sub3">2.3 Lima Tahap Alur Kerja</h3>
+  <p class="read">Pilih satu tahap untuk melihat peran, perangkat kapal, padanan alat kampus, komponen mikro, dan satu contoh kejadian yang sama di setiap tahap.</p>
+  <div class="stagetabs" id="stageTabs" role="tablist" aria-label="Lima tahap alur kerja"></div>
+  <div class="stagepanel" id="stagePanel" role="tabpanel" aria-live="polite"></div>
+  <div class="note"><span class="label">Catatan Taruna</span><p>Bedakan media fisik, antarmuka listrik, dan protokol data. RS-485 adalah standar lapisan fisik, sedangkan Modbus RTU adalah protokol komunikasi yang dapat berjalan di atasnya. Tabel lengkap seluruh tahap ada di <a href="#lampiran-a">Lampiran A</a>.</p></div>
+  <div class="label" style="margin-top:20px">Contoh alur</div>
+  <div class="flow"><span class="chip">Suhu bearing</span><span class="arr">→</span><span class="chip">RTD / Transmitter</span><span class="arr">→</span><span class="chip">I/O / Network</span><span class="arr">→</span><span class="chip">PLC / Controller</span><span class="arr">→</span><span class="chip">Alarm / HMI</span><span class="arr">→</span><span class="chip">Output logic</span><span class="arr">→</span><span class="chip">Relay / Drive</span><span class="arr">→</span><span class="chip">Pendingin atau shutdown sesuai desain</span></div>
+  <div class="note imp"><span class="label">Catatan Penting</span><p>Alur di atas bersifat konseptual. Sistem aktual dapat memiliki jalur sensor langsung ke proteksi, jalur hardwired, redundansi, dan interlock yang tidak melewati HMI atau jaringan umum.</p></div>
+
+  <figure class="fig"><div class="scroll"><svg viewBox="0 0 900 170" role="img" aria-label="Aliran sinyal dan perintah melalui lima tahap">
+    <defs><marker id="ar1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="sv-arrow"/></marker></defs>
+    <rect class="sv-hot" x="5" y="40" width="150" height="70" rx="4"/><text class="sv-n" x="80" y="60" text-anchor="middle">TAHAP 1</text><text class="sv-t" x="80" y="81" text-anchor="middle">SENSING</text><text class="sv-s" x="80" y="100" text-anchor="middle">4–20 mA</text>
+    <rect class="sv-hot" x="185" y="40" width="150" height="70" rx="4"/><text class="sv-n" x="260" y="60" text-anchor="middle">TAHAP 2</text><text class="sv-t" x="260" y="81" text-anchor="middle">COMMUNICATION</text><text class="sv-s" x="260" y="100" text-anchor="middle">RS-485 · CAN</text>
+    <rect class="sv-hot" x="365" y="40" width="150" height="70" rx="4"/><text class="sv-n" x="440" y="60" text-anchor="middle">TAHAP 3</text><text class="sv-t" x="440" y="81" text-anchor="middle">PROCESSING</text><text class="sv-s" x="440" y="100" text-anchor="middle">PLC / MCU</text>
+    <rect class="sv-gd" x="545" y="40" width="150" height="70" rx="4"/><text class="sv-n" x="620" y="60" text-anchor="middle">TAHAP 4</text><text class="sv-t" x="620" y="81" text-anchor="middle">ACTUATION &amp; POWER</text><text class="sv-s" x="620" y="100" text-anchor="middle">24V DC → 440V AC</text>
+    <rect class="sv-hot" x="725" y="40" width="150" height="70" rx="4"/><text class="sv-n" x="800" y="60" text-anchor="middle">TAHAP 5</text><text class="sv-t" x="800" y="81" text-anchor="middle">INTERFACE &amp; FLEET</text><text class="sv-s" x="800" y="100" text-anchor="middle">HMI · SCADA</text>
+    <line class="sv-lg sv-flow" x1="155" y1="75" x2="183" y2="75" marker-end="url(#ar1)"/>
+    <line class="sv-lg sv-flow" x1="335" y1="75" x2="363" y2="75" marker-end="url(#ar1)"/>
+    <line class="sv-lg sv-flow" x1="515" y1="75" x2="543" y2="75" marker-end="url(#ar1)"/>
+    <line class="sv-lg sv-flow" x1="695" y1="75" x2="723" y2="75" marker-end="url(#ar1)"/>
+    <text class="sv-s" x="450" y="150" text-anchor="middle">Sinyal naik dari sensor, perintah turun ke aktuator, status kembali ke layar (model konseptual)</text>
+  </svg></div><figcaption>Ilustrasi 1. Lima tahap alur kerja MET-353. Garis bergerak menunjukkan arah aliran.</figcaption></figure>
+
+  <h3 class="sub3">2.4 Tiga Jalur Eksekusi &amp; Keamanan</h3>
+  <p class="read">Inilah pembeda mutlak antara rekayasa elektronika darat dengan rekayasa elektronika kapal. Setiap sistem vital (<em>Essential Services</em>) di kapal wajib memiliki tiga jalur kerja berikut:</p>
+  <div class="cards">
+    <div class="card"><span class="tag">Jalur 1</span><h3>Brain Command (Kendali Program Otomatis)</h3><p>Berjalan normal melalui perangkat lunak di dalam PLC/CPU.</p><div class="ex"><b>Contoh:</b> Tekanan minyak lumas turun → PLC otomatis menyalakan pompa <em>standby</em>.</div></div>
+    <div class="card"><span class="tag">Jalur 2</span><h3>Hardwired Loop (Jalur Kabel Fisik Darurat Tanpa Prosesor)</h3><p>Jalur kabel tembaga langsung yang memotong jalur komputer/PLC untuk fungsi pengamanan nyawa dan mesin.</p><div class="ex"><b>Contoh:</b> Tombol <em>Emergency Stop</em> dan <em>Overspeed Trip</em> mesin induk. <strong>Jika PLC mati total atau terbakar, jalur ini tetap bekerja memutus suplai daya dan bahan bakar secara fisik.</strong></div></div>
+    <div class="card"><span class="tag">Jalur 3</span><h3>Dual Path / Redundancy (Jalur Cadangan Anti-Blackout)</h3><p>Sistem cadangan berlapis yang mengambil alih seketika (<em>bumpless transfer</em>) jika jalur utama gagal.</p><div class="ex"><b>Contoh:</b> Dua unit catu daya <em>24V DC Power Supply</em> paralel, dua jalur kabel komunikasi <em>CAN Bus</em> (A &amp; B), baterai UPS untuk sistem navigasi/alarm, serta tuas <em>Manual Override</em> mekanis pada kemudi.</div></div>
+  </div>
+  <div class="tool">
+    <h4>Simulator tiga jalur</h4>
+    <p style="color:var(--muted);margin:0">Pilih satu kejadian, lalu lihat jalur mana yang bekerja.</p>
+    <div class="btnrow" id="scnBtns" role="group" aria-label="Pilih kejadian"></div>
+    <div class="scn" id="scnText"></div>
+    <div class="lanes" id="lanes"></div>
+    <div class="proc" id="proc"></div>
+  </div>
+  <div class="note"><span class="label">Prinsip penting</span>
+    <ul class="bullets"><li>Identifikasi fungsi yang harus tetap tersedia dan kondisi aman saat gagal.</li><li>Periksa <em>common-cause failure</em>: dua jalur dapat gagal bersama bila berbagi sumber daya, kabel, lokasi, atau jaringan yang sama.</li><li>Periksa alarm kegagalan, deteksi fault, metode switchover, dan perilaku saat perpindahan. Redundansi harus dirancang dan diuji.</li><li>Tidak semua emergency stop atau trip sepenuhnya independen. Arsitektur aktual harus diperiksa pada diagram dan manual.</li><li>Jangan melakukan bypass proteksi, interlock, atau trip tanpa otorisasi dan prosedur resmi.</li></ul></div>
+
+  <figure class="fig"><div class="scroll"><svg viewBox="0 0 900 290" role="img" aria-label="Tiga jalur eksekusi dan keamanan">
+    <defs><marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="sv-arrow"/></marker></defs>
+    <text class="sv-l" x="20" y="20">JALUR 1 · BRAIN COMMAND (PROGRAM)</text>
+    <rect class="sv-hot" x="20" y="30" width="170" height="44" rx="4"/><text class="sv-t" x="105" y="57" text-anchor="middle">Sensor tekanan / suhu</text>
+    <rect class="sv-hot" x="250" y="30" width="170" height="44" rx="4"/><text class="sv-t" x="335" y="57" text-anchor="middle">PLC (logika program)</text>
+    <rect class="sv-hot" x="480" y="30" width="170" height="44" rx="4"/><text class="sv-t" x="565" y="57" text-anchor="middle">Driver / kontaktor</text>
+    <rect class="sv-hot" x="710" y="30" width="170" height="44" rx="4"/><text class="sv-t" x="795" y="57" text-anchor="middle">Pompa standby / mesin</text>
+    <line class="sv-ln sv-flow" x1="190" y1="52" x2="248" y2="52" marker-end="url(#ar2)"/><line class="sv-ln sv-flow" x1="420" y1="52" x2="478" y2="52" marker-end="url(#ar2)"/><line class="sv-ln sv-flow" x1="650" y1="52" x2="708" y2="52" marker-end="url(#ar2)"/>
+
+    <text class="sv-l" x="20" y="108">JALUR 2 · HARDWIRED LOOP (KABEL FISIK, TANPA PROSESOR)</text>
+    <rect class="sv-gd" x="20" y="118" width="170" height="44" rx="4"/><text class="sv-t" x="105" y="145" text-anchor="middle">Overspeed / E-stop</text>
+    <rect class="sv-gd" x="250" y="118" width="170" height="44" rx="4"/><text class="sv-t" x="335" y="145" text-anchor="middle">Rangkaian kabel trip</text>
+    <rect class="sv-gd" x="480" y="118" width="170" height="44" rx="4"/><text class="sv-t" x="565" y="145" text-anchor="middle">Putus daya &amp; bahan bakar</text>
+    <rect class="sv-gd" x="710" y="118" width="170" height="44" rx="4"/><text class="sv-t" x="795" y="145" text-anchor="middle">Mesin berhenti aman</text>
+    <line class="sv-lg sv-flow" x1="190" y1="140" x2="248" y2="140" marker-end="url(#ar2)"/><line class="sv-lg sv-flow" x1="420" y1="140" x2="478" y2="140" marker-end="url(#ar2)"/><line class="sv-lg sv-flow" x1="650" y1="140" x2="708" y2="140" marker-end="url(#ar2)"/>
+
+    <text class="sv-l" x="20" y="196">JALUR 3 · DUAL PATH (CADANGAN)</text>
+    <rect class="sv-hot" x="20" y="206" width="170" height="32" rx="4"/><text class="sv-t" x="105" y="227" text-anchor="middle">Catu daya 24V A</text>
+    <rect class="sv-hot" x="20" y="246" width="170" height="32" rx="4"/><text class="sv-t" x="105" y="267" text-anchor="middle">Catu daya 24V B</text>
+    <rect class="sv-hot" x="260" y="216" width="190" height="52" rx="4"/><text class="sv-t" x="355" y="246" text-anchor="middle">Paralel / redundan</text>
+    <rect class="sv-hot" x="480" y="220" width="190" height="44" rx="4"/><text class="sv-t" x="575" y="247" text-anchor="middle">PLC &amp; sensor tetap hidup</text>
+    <rect class="sv-hot" x="700" y="220" width="180" height="44" rx="4"/><text class="sv-t" x="790" y="247" text-anchor="middle">Alarm gagal catu → HMI</text>
+    <polyline class="sv-ln sv-flow" points="190,222 225,222 225,236 258,236" marker-end="url(#ar2)"/><polyline class="sv-ln sv-flow" points="190,262 225,262 225,248 258,248" marker-end="url(#ar2)"/>
+    <line class="sv-ln sv-flow" x1="450" y1="242" x2="478" y2="242" marker-end="url(#ar2)"/><line class="sv-ln sv-flow" x1="670" y1="242" x2="698" y2="242" marker-end="url(#ar2)"/>
+  </svg></div><figcaption>Ilustrasi 2. Tiga jalur berjalan berdampingan. Jalur 2 tidak melewati PLC, sehingga tetap bekerja walau PLC mati.</figcaption></figure>
+
+  <h3 class="sub3">2.5 Aturan Wajib</h3>
+  <ul class="bullets"><li>Jangan pernah menganggap PLC satu-satunya pengaman.</li><li>Setiap sistem vital harus memiliki jalur hardwired.</li><li>Setiap diagnosis dimulai dari domain, lalu alur, lalu jalur keamanan.</li></ul>
+</section>
+
+<!-- BAB 3 -->
+<section class="bab" id="bab3">
+  <div class="bab-head"><span class="label">Bab 3</span><h2>Lapisan Mikro ke Sistemik: IC, Arduino, ESP32, dan Marine PLC</h2><a class="back" href="#atas">↑ kembali ke atas</a></div>
+  <div class="note goal"><span class="label">Capaian Pembelajaran</span><p>Taruna mampu menjelaskan posisi Arduino/ESP32 sebagai simulator PLC dan menghubungkannya dengan IC dasar serta perangkat kapal nyata.</p></div>
+
+  <h3 class="sub3">3.1 Tiga Aturan Posisi Mikrokontroler</h3>
+  <p class="read">Agar taruna tidak salah kaprah membandingkan papan praktikum kampus dengan peralatan di atas kapal niaga, pegang tiga aturan utama berikut:</p>
+  <div class="cards">
+    <div class="card"><span class="tag">Tahap 3</span><h3>Aturan 1: Di Kampus Sebagai Simulator Otak</h3><p>Arduino dan ESP32 digunakan di atas <em>project plate</em> untuk menggantikan <strong>Marine PLC</strong> yang harganya sangat mahal. Dengan Arduino/ESP32, taruna mempraktikkan langsung cara kerja <strong>IC ADC</strong> membaca sensor, cara <strong>CPU</strong> mengeksekusi logika, dan cara sinyal keluar memicu <strong>MOSFET/Relay</strong>.</p></div>
+    <div class="card"><span class="tag">Tahap 3 &amp; 5</span><h3>Aturan 2: ESP32 Sebagai Jembatan IoT</h3><p>ESP32 memiliki keunggulan modul Wi-Fi dan Bluetooth bawaan, sehingga sangat tepat dipakai melatih taruna membuat prototipe <strong>Tahap 5 (SCADA/IoT Fleet Monitoring)</strong> untuk mengirim data suhu atau getaran ke layar monitor jarak jauh.</p></div>
+    <div class="card"><span class="tag">Kapal nyata</span><h3>Aturan 3: Hadir dalam Wujud "Embedded System"</h3><p>Di kamar mesin kapal niaga yang panas dan bergetar hebat, papan Arduino terbuka dilarang dipasang karena tidak memenuhi sertifikasi <em>Marine Class</em> (BKI, DNV, Lloyd's). Namun, <strong>chip mikrokontroler yang sama</strong> tertanam rapi sebagai <em>Embedded System</em> di dalam kepala <em>Pressure Transmitter</em>, modul kontrol <em>VFD</em>, panel <em>Emergency Generator</em>, dan perangkat <em>GMDSS</em>.</p></div>
+  </div>
+
+  <h3 class="sub3">3.2 Peran Arduino dan ESP32</h3>
+  <div class="scroll"><table class="tbl">
+    <thead><tr><th>Perangkat Kampus</th><th>Peran dalam MET-353</th><th>Padanan Kapal</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Arduino Uno/Mega</strong></td><td>Simulasi logika PLC, membaca ADC, mengendalikan relay/MOSFET</td><td>Marine PLC</td></tr>
+      <tr><td><strong>ESP32</strong></td><td>Simulasi PLC + IoT, kirim data Wi-Fi ke dashboard</td><td>Gateway monitoring, SCADA remote</td></tr>
+      <tr><td><strong>Raspberry Pi</strong></td><td>Simulasi komputer monitoring</td><td>Komputer navigasi/monitoring</td></tr>
+      <tr><td><strong>Modul MAX485</strong></td><td>Komunikasi RS-485</td><td>Bus Modbus RTU</td></tr>
+      <tr><td><strong>Modul MCP2515</strong></td><td>Komunikasi CAN Bus</td><td>Jaringan mesin dan alarm</td></tr>
+      <tr><td><strong>MOSFET IRF540</strong></td><td>Sakelar arus sedang</td><td>Output PLC, driver solenoid</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note imp"><span class="label">Catatan Penting</span><p>Arduino/ESP32 adalah alat pendidikan dan prototipe. Jangan menghubungkannya langsung ke 220/380/440 VAC atau ke rangkaian kapal. Gunakan catu tegangan rendah terisolasi, fuse, driver yang sesuai, enclosure, dan pengawasan instruktur. Perangkat hobi tidak menggantikan PLC, safety controller, atau peralatan marine-approved.</p></div>
+
+  <h3 class="sub3">3.3 Komponen Mikro Wajib</h3>
+  <div class="pairs">
+    <div><b>Op-Amp LM358/TL072</b><br>Penguat sinyal lemah.</div>
+    <div><b>ADC</b><br>Mengubah analog ke digital.</div>
+    <div><b>Optocoupler</b><br>Isolasi antara PLC dan beban.</div>
+    <div><b>Dioda TVS</b><br>Pelindung lonjakan.</div>
+    <div><b>EEPROM/Flash</b><br>Penyimpan program dan data logger.</div>
+    <div><b>Relay</b><br>Isolasi dan switching beban.</div>
+    <div><b>MOSFET/IGBT/Thyristor</b><br>Sakelar daya pada output dan MCC Box.</div>
+  </div>
+  <h4 style="font-family:var(--font-head);font-size:1.25rem;margin:24px 0 4px">Kalkulator sinyal 4–20 mA</h4>
+  <div class="tool">
+    <p class="read" style="color:var(--muted);margin:0">Sensor tahap 1 mengirim sinyal standar 4–20 mA. Nilai 4 mA berarti batas bawah rentang, 20 mA berarti batas atas. Isi rentang transmitter, lalu geser arusnya.</p>
+    <div class="fields">
+      <label for="rmin">Batas bawah<input id="rmin" type="number" value="0" step="any"></label>
+      <label for="rmax">Batas atas<input id="rmax" type="number" value="10" step="any"></label>
+      <label for="runit">Satuan<input id="runit" type="text" value="bar" maxlength="8"></label>
+      <label for="mai">Arus (mA)<input id="mai" type="number" value="12" min="0" max="24" step="0.1"></label>
+    </div>
+    <input id="mas" type="range" min="0" max="24" step="0.1" value="12" aria-label="Arus loop dalam mA">
+    <div class="readout">
+      <div><div class="v" id="outVal">5,00 bar</div><div class="l">Nilai proses</div></div>
+      <div><div class="v" id="outPct">50,0 %</div><div class="l">Persen rentang</div></div>
+    </div>
+    <div class="status ok" id="outStat">Arus normal.</div>
+    <div class="note" style="margin-bottom:0"><span class="label">Catatan Taruna</span>
+      <p>Nilai terendah sinyal ini 4 mA, bukan 0 mA. Dengan begitu kabel putus (arus 0 mA) bisa dibedakan dari nilai proses 0 %. Batas arus yang dianggap gangguan berbeda antar pabrikan; kalkulator ini memakai kisaran umum.</p></div>
+  </div>
+
+  <h3 class="sub3">3.4 Praktikum: Sensor Suhu ke Layar dan Relay</h3>
+  <div class="flow"><span class="chip">DS18B20</span><span class="arr">→</span><span class="chip">Arduino/ESP32</span><span class="arr">→</span><span class="chip">Logika ambang</span><span class="arr">→</span><span class="chip">Relay</span><span class="arr">→</span><span class="chip">Lampu indikator</span><span class="arr">→</span><span class="chip">LCD I2C/OLED</span></div>
+  <p class="read"><strong>Variasi:</strong> kirim data ke dashboard web ESP32.</p>
+
+  <h3 class="sub3">3.5 Fault Injection</h3>
+  <ul class="bullets"><li>Sensor dicabut.</li><li>Kabel data putus.</li><li>Relay macet.</li><li>MOSFET short.</li><li>Program logika dibalik.</li><li>Supply 5V turun.</li></ul>
+</section>
+
+<!-- BAB 4 -->
+<section class="bab" id="bab4">
+  <div class="bab-head"><span class="label">Bab 4</span><h2>Elektronika Daya dan MCC Box</h2><a class="back" href="#atas">↑ kembali ke atas</a></div>
+  <div class="note goal"><span class="label">Capaian Pembelajaran</span><p>Taruna mampu menjelaskan prinsip dasar MCC Box, kontaktor, soft starter, VFD, AVR, UPS, dan batas aman arus lemah–arus kuat.</p></div>
+  <p class="read">Tahap 4 (<em>Actuation &amp; Power</em>) menjembatani sinyal kontrol arus lemah (<strong>24V DC</strong>) dengan penggerak arus kuat (<strong>440V AC</strong>) di dalam <strong>MCC Box</strong>. Di sinilah <em>perkawinan</em> elektronika kontrol dengan tenaga terjadi.</p>
+
+  <h3 class="sub3">4.1 Konsep Kunci</h3>
+  <div class="pairs">
+    <div><b>Kontaktor magnetik</b><br>Sakelar daya yang dikendalikan koil.</div>
+    <div><b>Thermal Overload Relay</b><br>Melindungi motor dari panas berlebih.</div>
+    <div><b>Soft starter</b><br>Mengurangi lonjakan arus saat start.</div>
+    <div><b>VFD/Inverter</b><br>Mengatur frekuensi dan tegangan motor.</div>
+    <div><b>AVR</b><br>Menjaga tegangan generator.</div>
+    <div><b>UPS</b><br>Catu daya sementara untuk sistem vital.</div>
+    <div><b>High Voltage</b><br>Sistem &gt;1.000V, memerlukan prosedur khusus.</div>
+  </div>
+
+  <h3 class="sub3">4.2 Padanan Kapal Nyata</h3>
+  <div class="cards">
+    <div class="card"><h4>Generator dan Power Management</h4><p>Pengukuran tegangan, arus, frekuensi, daya, temperatur, tekanan, governor, AVR, proteksi generator, sinkronisasi, dan power management. Bedakan pengukuran, kontrol, proteksi, dan distribusi daya.</p></div>
+    <div class="card"><h4>Motor, pompa, dan MCC</h4><p>Starter motor dapat berupa DOL, star-delta, soft starter, atau VFD sesuai beban dan desain. MCC menggabungkan switching, proteksi, kontrol, dan distribusi. Pelajari diagram daya dan diagram kontrol secara terpisah, lalu hubungkan keduanya.</p></div>
+    <div class="card"><h4>Bilge, ballast, dan sistem fluida</h4><p>Level switch/transmitter, valve, pompa, starter, alarm, dan interlock. Analisis mencakup mode manual/automatic, permissive, alarm, proteksi motor, dan prosedur operasi.</p></div>
+  </div>
+
+  <figure class="fig"><div class="scroll"><svg viewBox="0 0 900 215" role="img" aria-label="Jembatan sisi kontrol 24V DC ke sisi daya 440V AC">
+    <defs><marker id="ar3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="sv-arrow"/></marker></defs>
+    <text class="sv-l" x="20" y="22">SISI KONTROL · 24V DC (ARUS LEMAH)</text>
+    <text class="sv-l" x="505" y="22">SISI DAYA · 440V AC (ARUS KUAT)</text>
+    <rect class="sv-zl" x="10" y="32" width="395" height="150" rx="6"/>
+    <rect class="sv-zr" x="495" y="32" width="395" height="150" rx="6"/>
+    <rect class="sv-hot" x="25" y="80" width="150" height="64" rx="4"/><text class="sv-t" x="100" y="108" text-anchor="middle">Output PLC / driver</text><text class="sv-s" x="100" y="128" text-anchor="middle">MOSFET · relay</text>
+    <rect class="sv-hot" x="235" y="80" width="150" height="64" rx="4"/><text class="sv-t" x="310" y="108" text-anchor="middle">Koil kontaktor</text><text class="sv-s" x="310" y="128" text-anchor="middle">24V DC</text>
+    <rect class="sv-gd" x="510" y="80" width="115" height="64" rx="4"/><text class="sv-t" x="567" y="108" text-anchor="middle">Kontak daya</text><text class="sv-s" x="567" y="128" text-anchor="middle">440V AC</text>
+    <rect class="sv-gd" x="640" y="80" width="110" height="64" rx="4"/><text class="sv-t" x="695" y="108" text-anchor="middle">Overload relay</text><text class="sv-s" x="695" y="128" text-anchor="middle">proteksi motor</text>
+    <rect class="sv-gd" x="765" y="80" width="110" height="64" rx="4"/><text class="sv-t" x="820" y="108" text-anchor="middle">Motor pompa</text><text class="sv-s" x="820" y="128" text-anchor="middle">arus kuat</text>
+    <line class="sv-ln sv-flow" x1="175" y1="112" x2="233" y2="112" marker-end="url(#ar3)"/>
+    <line class="sv-lg sv-flow" x1="385" y1="112" x2="508" y2="112" marker-end="url(#ar3)"/>
+    <text class="sv-s" x="447" y="102" text-anchor="middle">tarikan magnet</text>
+    <line class="sv-lg sv-flow" x1="625" y1="112" x2="638" y2="112" marker-end="url(#ar3)"/>
+    <line class="sv-lg sv-flow" x1="750" y1="112" x2="763" y2="112" marker-end="url(#ar3)"/>
+    <text class="sv-s" x="450" y="204" text-anchor="middle">Koil dan kontak daya terpisah secara listrik. Hanya medan magnet yang menjembatani.</text>
+  </svg></div><figcaption>Ilustrasi 3. Perkawinan arus lemah dan arus kuat di MCC Box lewat kontaktor.</figcaption></figure>
+
+  <h3 class="sub3">4.3 Batas Keselamatan</h3>
+  <ul class="bullets"><li>Sinyal kontrol umumnya 24V DC.</li><li>Daya motor umumnya 440V AC.</li><li>Jangan mencampur sisi kontrol dan sisi daya tanpa isolasi.</li><li>Wajib LOTO: Lock Out, Tag Out, sesuai prosedur dan otorisasi.</li><li>Verifikasi bebas tegangan dengan alat ukur yang sesuai dan telah diperiksa.</li><li>Gunakan PPE dan alat ukur sesuai rating.</li><li>Jangan bekerja pada switchboard atau HV tanpa kompetensi, izin, prosedur, dan pengawasan yang disyaratkan.</li></ul>
+
+  <h3 class="sub3">4.4 Praktikum</h3>
+  <ul class="bullets"><li>Kendalikan motor DC dengan MOSFET dari Arduino.</li><li>Gunakan relay untuk mensimulasikan kontaktor.</li><li>Buat mini inverter/dimmer untuk memahami prinsip VFD secara aman.</li><li>Simulasikan E-stop memutus jalur kontrol.</li></ul>
+
+  <h3 class="sub3">4.5 Fault Injection</h3>
+  <ul class="bullets"><li>Koil kontaktor tidak mendapat 24V.</li><li>Thermal overload trip.</li><li>MOSFET short sehingga beban terus menyala.</li><li>VFD trip karena overcurrent.</li><li>E-stop terbuka.</li><li>Supply 24V DC gagal.</li></ul>
+</section>
+
+<!-- BAB 5 -->
+<section class="bab" id="bab5">
+  <div class="bab-head"><span class="label">Bab 5</span><h2>Navigasi, GMDSS, Hazardous Area, dan Maritime Cyber Security</h2><a class="back" href="#atas">↑ kembali ke atas</a></div>
+  <div class="note goal"><span class="label">Capaian Pembelajaran</span><p>Taruna mampu mengenali perangkat keselamatan dan navigasi wajib SOLAS serta prinsip perlindungan area berbahaya dan siber.</p></div>
+
+  <h3 class="sub3">5.1 Perangkat Wajib</h3>
+  <div class="chips"><span class="chip">Radar</span><span class="chip">ECDIS</span><span class="chip">AIS</span><span class="chip">Gyrocompass</span><span class="chip">GMDSS: VHF, MF/HF, Inmarsat, EPIRB, SART</span><span class="chip">Fire &amp; Gas Detection</span><span class="chip">Alarm Monitoring System</span></div>
+  <p class="read" style="margin-top:14px">ETO perlu memahami catu daya, koneksi, alarm, antena, jaringan data, backup, dan pemeriksaan awal sesuai manual serta pembagian tugas di kapal.</p>
+  <div class="note imp"><span class="label">Catatan Penting</span><p>Tidak semua perangkat pada daftar ini diwajibkan pada setiap kapal. Kewajiban bergantung pada jenis dan ukuran kapal, pelayaran, tanggal pembangunan, notasi kelas, dan persyaratan administrasi bendera. Rujukan pembelajaran ETO mencakup STCW (kompetensi ETO pada Regulation III/6), SOLAS, aturan radio dan GMDSS, standar IEC/ISO, publikasi IMO, dan rules badan klasifikasi. Selalu verifikasi edisi dan applicability.</p></div>
+
+  <h3 class="sub3">5.2 Hazardous Area</h3>
+  <p class="read">Di area tanker dan ruang berbahaya, peralatan harus <strong>Ex-proof</strong> atau <strong>Intrinsically Safe</strong>. Gunakan Zener Barrier dan isolator untuk membatasi energi agar tidak memicu ledakan. Pemilihan, pemasangan, dan grounding perangkat ini mengikuti klasifikasi area, sertifikasi, dan desain yang berlaku; bukan aksesori yang dapat dipasang sembarang.</p>
+
+  <h3 class="sub3">5.3 Remote Monitoring dan Fleet</h3>
+  <p class="read">Data operasional dapat dikirim ke darat melalui jaringan kapal dan komunikasi satelit. Sistem pemantauan jarak jauh perlu membatasi akses, memisahkan jaringan sesuai kebutuhan, mengelola akun, memperbarui perangkat secara terkendali, mencatat aktivitas, dan memiliki prosedur ketika koneksi terputus.</p>
+
+  <h3 class="sub3">5.4 Cyber Security Kapal</h3>
+  <div class="cards">
+    <div class="card"><h4>Ancaman</h4><ul class="bullets"><li>GPS spoofing/jamming.</li><li>Malware pada komputer monitoring.</li><li>Akses tidak sah ke jaringan SCADA.</li><li>Perangkat USB tidak dikenal.</li></ul></div>
+    <div class="card"><h4>Mitigasi</h4><ul class="bullets"><li>Segmentasi jaringan.</li><li>Maritime firewall.</li><li>Update perangkat lunak.</li><li>Backup konfigurasi.</li><li>Jalur hardwired tetap menjadi benteng terakhir.</li></ul></div>
+  </div>
+  <p class="read">Sistem OT/ICS mengendalikan proses fisik dan memiliki kebutuhan ketersediaan serta keselamatan yang berbeda dari IT kantor. Terapkan inventaris aset, kontrol akses, manajemen perubahan, pemantauan, dan prosedur respons insiden. Jangan memasang perangkat atau memindai jaringan kapal tanpa persetujuan.</p>
+
+  <h3 class="sub3">5.5 Prinsip Human-in-the-Loop</h3>
+  <p class="read">Otomasi dan AI membantu operator, tetapi keputusan keselamatan tetap mengikuti prosedur, kewenangan, dan tanggung jawab manusia. AI tidak boleh diperlakukan sebagai satu-satunya proteksi keselamatan.</p>
+
+  <h3 class="sub3">5.6 Latihan</h3>
+  <p class="read">Buat daftar perangkat di atas kapal, tentukan domainnya, lalu tandai mana yang wajib memiliki jalur cadangan.</p>
+</section>
+
+<!-- BAB 6 -->
+<section class="bab" id="bab6">
+  <div class="bab-head"><span class="label">Bab 6</span><h2>Metodologi Troubleshooting dan Fault Injection MET-353</h2><a class="back" href="#atas">↑ kembali ke atas</a></div>
+  <div class="note goal"><span class="label">Capaian Pembelajaran</span><p>Taruna mampu mendiagnosis gangguan secara sistematis dengan Empat Langkah Diagnosis 3-5-3 dan mendokumentasikan hasilnya.</p></div>
+
+  <h3 class="sub3">6.1 Empat Langkah Diagnosis 3-5-3</h3>
+  <p class="read">Setiap kali taruna dihadapkan pada satu <em>wiring diagram</em> kapal atau papan praktikum <em>project plate</em>, taruna wajib menjawab <strong>4 Langkah Diagnosis 3-5-3</strong> ini:</p>
+  <div class="progress"><div class="bar"><i id="barFill"></i></div><span class="mono" id="barTxt">0 / 4 langkah</span></div>
+  <div class="steps">
+    <div class="step" id="st1"><input type="checkbox" id="c1" aria-label="Langkah 1 selesai"><div>
+      <h3>1. Tentukan Domainnya</h3>
+      <p>Apakah masalah ada di sistem <em>Automation</em>, <em>Power Electronics (MCC Box)</em>, atau <em>Navigation/Safety</em>?</p>
+      <p class="q"><b>Pertanyaan pemandu:</b> perangkat apa yang gejalanya muncul pertama kali? Sensor dan PLC (Domain 1), motor dan panel daya (Domain 2), atau radar, ECDIS, GMDSS dan deteksi kebakaran (Domain 3)?</p></div></div>
+    <div class="step" id="st2"><input type="checkbox" id="c2" aria-label="Langkah 2 selesai"><div>
+      <h3>2. Lacak 5 Tahap Alurnya</h3>
+      <p>Ukur secara berurutan mulai dari keluaran <strong>Sensor (4–20 mA)</strong> → <strong>Kabel Bus</strong> → <strong>Input/Output PLC (Arduino/ESP32)</strong> → <strong>Driver MOSFET/Contactor/VFD</strong> → <strong>Tampilan HMI</strong>. Periksa aliran daya secara paralel.</p>
+      <p class="q"><b>Pertanyaan pemandu:</b> di tahap mana nilai terakhir yang benar? Kerusakan ada tepat setelah titik itu.</p></div></div>
+    <div class="step" id="st3"><input type="checkbox" id="c3" aria-label="Langkah 3 selesai"><div>
+      <h3>3. Pisahkan Gangguan Software vs Fisik</h3>
+      <p>Periksa apakah kegagalan terjadi pada logika <strong>Brain Command</strong> atau karena terputusnya rangkaian <strong>Hardwired Loop</strong> (misal: tombol <em>Emergency Stop</em> terkunci atau <em>Thermal Overload Relay</em> trip).</p>
+      <p class="q"><b>Pertanyaan pemandu:</b> apakah PLC sudah mengirim perintah, tetapi alat di lapangan tidak merespons? Bila ya, curigai sisi fisik: sensor, kabel, catu daya, atau perangkat.</p></div></div>
+    <div class="step" id="st4"><input type="checkbox" id="c4" aria-label="Langkah 4 selesai"><div>
+      <h3>4. Verifikasi Jalur Cadangan</h3>
+      <p>Pastikan sistem <strong>Dual Path</strong> (catu daya cadangan 24V DC dan jaringan cadangan), UPS, dan manual override berfungsi normal sebelum kapal dinyatakan laik laut.</p>
+      <p class="q"><b>Pertanyaan pemandu:</b> kedua catu daya 24V dan kedua jalur CAN Bus A &amp; B terbaca sehat? Satu pemeriksaan taruna tidak cukup untuk menyatakan sistem laik operasi.</p></div></div>
+  </div>
+  <div class="status" id="allDone" hidden>Keempat langkah selesai. Diagnosis 3-5-3 lengkap.</div>
+  <div class="note imp"><span class="label">Catatan Penting</span><p>Di kapal, troubleshooting dilakukan hanya dalam batas kewenangan, kompetensi, izin kerja, dan prosedur SMS. Jangan menguji trip atau memaksa start peralatan vital tanpa persetujuan perwira yang bertanggung jawab.</p></div>
+
+  <h3 class="sub3">6.2 Tabel Fault Injection</h3>
+  <div class="scroll"><table class="tbl" style="min-width:700px">
+    <thead><tr><th>No</th><th>Gangguan</th><th>Gejala</th><th>Tahap yang Diperiksa</th><th>Jalur Keamanan</th></tr></thead>
+    <tbody>
+      <tr><td class="k">1</td><td>Sensor putus</td><td>Nilai 0/error</td><td>Sensing</td><td>Hardwired alarm</td></tr>
+      <tr><td class="k">2</td><td>Kabel RS-485 A/B tertukar</td><td>Data tidak terbaca</td><td>Communication</td><td>Jalur lokal</td></tr>
+      <tr><td class="k">3</td><td>Program PLC salah logika</td><td>Aktuator tidak menyala</td><td>Processing</td><td>Manual override</td></tr>
+      <tr><td class="k">4</td><td>Relay macet</td><td>Beban terus hidup</td><td>Actuation</td><td>E-stop</td></tr>
+      <tr><td class="k">5</td><td>MOSFET short</td><td>Output tidak bisa dimatikan</td><td>Actuation</td><td>Sekring/breaker</td></tr>
+      <tr><td class="k">6</td><td>VFD trip</td><td>Motor berhenti</td><td>Power</td><td>Soft starter/bypass</td></tr>
+      <tr><td class="k">7</td><td>E-stop terbuka</td><td>Sistem tidak siap</td><td>Hardwired</td><td>Wajib reset manual</td></tr>
+      <tr><td class="k">8</td><td>Supply 24V turun</td><td>PLC restart</td><td>Power</td><td>UPS/dual supply</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 class="sub3">6.3 Kasus: Pompa Standby Tidak Start (MV Baabullah)</h3>
+  <p class="read">Di kapal rujukan MV Baabullah (50.000 DWT), HMI menampilkan alarm <span class="mono">LO PRESS LOW</span> (tekanan minyak lumas rendah), tetapi pompa <em>standby</em> tidak menyala. Terapkan empat langkah di atas, dengan pertanyaan diagnosis per tahap:</p>
+  <div class="scroll"><table class="tbl">
+    <thead><tr><th>Area pemeriksaan</th><th>Pertanyaan diagnosis</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Sensing</strong></td><td>Apakah level/pressure permissive terpenuhi? Apakah sensor dan kabel normal?</td></tr>
+      <tr><td><strong>Communication</strong></td><td>Apakah data sampai ke controller? Apakah alamat/protokol benar?</td></tr>
+      <tr><td><strong>Processing</strong></td><td>Apakah mode AUTO aktif? Apakah interlock atau timer menahan start?</td></tr>
+      <tr><td><strong>Actuation &amp; Power</strong></td><td>Apakah supply tersedia? MCB/fuse normal? Contactor coil dan overload bagaimana?</td></tr>
+      <tr><td><strong>Interface</strong></td><td>Apakah alarm atau status inhibit terlihat di HMI?</td></tr>
+      <tr><td><strong>Safety / redundancy</strong></td><td>Apakah E-stop, trip, atau standby path aktif? Ikuti diagram dan prosedur.</td></tr>
+    </tbody>
+  </table></div>
+  <details>
+    <summary>Arah diagnosis kasus ini</summary>
+    <ol class="num">
+      <li><span><b>Domain:</b> Automation &amp; Control (Domain 1), karena alarm dan pompa standby diatur logika PLC.</span></li>
+      <li><span><b>Software vs fisik:</b> bila output PLC sudah aktif tetapi kontaktor tidak menarik, curigai fisik (misalnya <em>Thermal Overload Relay</em> trip atau sekering). Bila output PLC tidak aktif, curigai logika Brain Command.</span></li>
+      <li><span><b>Jalur cadangan:</b> pastikan catu daya 24V cadangan dan jalur komunikasi cadangan sehat.</span></li>
+    </ol>
+  </details>
+  <details>
+    <summary>Urutan diagnosis dasar pada trainer</summary>
+    <ol class="num"><li>Amati gejala tanpa menyentuh rangkaian.</li><li>Baca diagram dan tentukan titik ukur yang aman.</li><li>Periksa catu tegangan rendah dan polaritas.</li><li>Periksa sensor dan sinyal pada input.</li><li>Periksa komunikasi dan status controller.</li><li>Periksa logika program serta status output.</li><li>Periksa driver, relay, beban, dan proteksi.</li><li>Periksa tampilan, alarm, dan pencatatan hasil.</li><li>Catat penyebab, tindakan, dan hasil uji.</li></ol>
+  </details>
+
+  <h3 class="sub3">6.4 Lembar Kerja Diagnosis</h3>
+  <div class="tool">
+    <p style="color:var(--muted);margin:0">Isi lembar kerja, lalu salin hasilnya untuk laporan.</p>
+    <div class="fields">
+      <label for="w-nama">Nama<input id="w-nama" type="text" autocomplete="off"></label>
+      <label for="w-tgl">Tanggal<input id="w-tgl" type="date"></label>
+      <label for="w-panel">Panel / Project Plate<input id="w-panel" type="text" autocomplete="off"></label>
+      <label for="w-dom">Domain<select id="w-dom"><option value="">Pilih</option><option>Domain 1: Automation &amp; Control</option><option>Domain 2: Power Electronics &amp; High Voltage</option><option>Domain 3: Navigation, Radio &amp; Marine Safety</option></select></label>
+    </div>
+    <div class="wsgrid" id="wsGrid"></div>
+    <div class="btnrow"><button class="btn" type="button" id="wsCopy">Salin lembar kerja</button></div>
+    <div class="status" id="wsMsg" hidden></div>
+    <textarea class="copyout" id="wsOut" readonly hidden aria-label="Hasil lembar kerja"></textarea>
+  </div>
+</section>
+
+<!-- BAB 7 -->
+<section class="bab" id="bab7">
+  <div class="bab-head"><span class="label">Bab 7</span><h2>Masa Depan MET-353 dalam Ekosistem Maritime 5.0</h2><a class="back" href="#atas">↑ kembali ke atas</a></div>
+  <div class="note goal"><span class="label">Capaian Pembelajaran</span><p>Taruna mampu menghubungkan MET-353 dengan isu Maritime 5.0: energi hijau, digital twin, predictive AI, kapal otonom, dan ketahanan siber.</p></div>
+
+  <h3 class="sub3">7.1 Empat Jalur Pengembangan</h3>
+  <p class="read">Kerangka MET-353 sudah memiliki fondasi yang tepat untuk dikembangkan ke arah <strong>Maritime 5.0</strong> melalui empat jalur berikut:</p>
+  <div class="rows5">
+    <div class="r5"><div><span class="l">Elemen dalam MET-353</span><b>Domain 2: Power Electronics</b></div><div><span class="l">Fondasi saat ini (Maritime 4.0)</span>Pengaturan motor pompa dengan VFD dan <em>Soft Starter</em> di MCC Box.</div><div class="new"><span class="l">Arah Maritime 5.0</span><b>Green Shipping &amp; Hybrid Propulsion:</b> manajemen daya baterai kapal listrik (<em>Battery Energy Storage System</em>), <em>Shaft Generator</em>, dan efisiensi energi untuk menekan emisi karbon (aturan IMO EEXI/CII).</div></div>
+    <div class="r5"><div><span class="l">Elemen dalam MET-353</span><b>Tahap 3 &amp; 5: Processing &amp; Interface</b></div><div><span class="l">Fondasi saat ini (Maritime 4.0)</span>Monitoring alarm di ruang kontrol (<em>SCADA/HMI</em>) dan kirim data ke darat.</div><div class="new"><span class="l">Arah Maritime 5.0</span><b>Digital Twin &amp; Predictive AI:</b> kembaran digital mesin kapal untuk memprediksi kerusakan sebelum terjadi (<em>Zero Breakdown</em>) serta bantuan <em>Augmented Reality</em> (AR) bagi ETO saat memperbaiki panel.</div></div>
+    <div class="r5"><div><span class="l">Elemen dalam MET-353</span><b>Tahap 5: Fleet &amp; Network</b></div><div><span class="l">Fondasi saat ini (Maritime 4.0)</span>Pemantauan kapal jarak jauh melalui satelit (<em>IoT</em>).</div><div class="new"><span class="l">Arah Maritime 5.0</span><b>Autonomous Ship Support (MASS):</b> sistem kendali kapal semi-otonom yang diawasi oleh operator manusia dari <em>Shore Control Center</em> (pusat kendali darat).</div></div>
+    <div class="r5"><div><span class="l">Elemen dalam MET-353</span><b>Jalur 2 &amp; 3: Hardwired &amp; Dual Path</b></div><div><span class="l">Fondasi saat ini (Maritime 4.0)</span>Pengaman kabel fisik darurat dan jalur ganda <em>24V DC / CAN Bus</em>.</div><div class="new"><span class="l">Arah Maritime 5.0</span><b>Cyber-Physical Resilience:</b> ketahanan sistem kapal terhadap serangan peretas (<em>cyber attack</em>) dan gangguan sinyal GPS (<em>spoofing</em>), di mana jalur <em>Hardwired</em> menjadi benteng terakhir kendali manusia (<em>Human-in-the-Loop</em>).</div></div>
+  </div>
+
+  <h3 class="sub3">7.2 Peta Kompetensi Bertahap</h3>
+  <div class="scroll"><table class="tbl" style="min-width:680px">
+    <thead><tr><th>Level</th><th>Fokus</th><th>Bukti kompetensi</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1. Foundation</strong></td><td>Listrik DC/AC, komponen, pengukuran, keselamatan</td><td>Mampu membaca rangkaian dasar dan mengukur dengan aman</td></tr>
+      <tr><td><strong>2. Electronics &amp; Embedded</strong></td><td>Sensor, IC, ADC, MCU, C/C++, komunikasi dasar</td><td>Mampu membuat trainer input-process-output tegangan rendah</td></tr>
+      <tr><td><strong>3. Industrial Automation</strong></td><td>PLC, ladder, HMI, motor starter, VFD, jaringan industri</td><td>Mampu membaca diagram dan menganalisis sistem otomasi</td></tr>
+      <tr><td><strong>4. Marine Application</strong></td><td>Generator, PMS, AMS, navigasi, radio, safety, cyber</td><td>Mampu menjelaskan arsitektur dan melakukan pemeriksaan awal sesuai kewenangan</td></tr>
+      <tr><td><strong>5. Integration &amp; Future</strong></td><td>Digital twin, data analytics, predictive maintenance, green ship, MASS</td><td>Mampu merancang konsep integrasi dan mengevaluasi risiko</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 class="sub3">7.3 Proyek Akhir Taruna</h3>
+  <p class="read">Pilih salah satu:</p>
+  <ol class="num"><li>Prototipe monitoring suhu dan getaran motor berbasis ESP32.</li><li>Simulasi digital twin mini untuk pompa.</li><li>Dashboard SCADA sederhana dengan alarm dan log data.</li><li>Simulasi hardwired E-stop dan dual power supply 24V DC.</li><li>Analisis cyber security sederhana pada jaringan Modbus.</li></ol>
+  <div class="label" style="margin-top:20px">Arsitektur trainer yang disarankan</div>
+  <div class="flow"><span class="chip">DS18B20 / Potensiometer / Float Switch</span><span class="arr">→</span><span class="chip">Arduino / ESP32</span><span class="arr">→</span><span class="chip">Driver MOSFET / Relay DC</span><span class="arr">→</span><span class="chip">Lampu / Motor DC kecil</span><span class="arr">→</span><span class="chip">LCD / OLED / Web UI</span></div>
+  <p class="read">Tambahan: logging data, alarm batas, komunikasi serial/Modbus trainer, dan simulasi fault yang aman (sensor terputus, nilai di luar rentang, komunikasi terputus, atau catu trainer turun).</p>
+  <div class="note imp"><span class="label">Catatan Penting</span><p>Proyek ini adalah trainer pendidikan tegangan rendah, bukan desain siap kapal. Jangan menyambungkannya ke sistem kapal aktif, tegangan utama, aktuator kapal, alarm keselamatan, atau jaringan OT kapal. Aplikasi nyata memerlukan engineering, perangkat berstandar marine, persetujuan, pengujian, commissioning, dan dokumentasi oleh pihak berwenang.</p></div>
+
+  <h3 class="sub3">7.4 Penutup</h3>
+  <p class="read">Kapal masa depan akan semakin cerdas, tetapi keselamatan tetap bertumpu pada ETO yang memahami alur sinyal, jalur pengaman, dan batas kewenangannya. MET-353 memberi peta itu: dari sensor ke layar, dari layar ke keselamatan.</p>
+</section>
+
+<!-- LAMPIRAN A -->
+<section class="bab" id="lampiran-a">
+  <div class="bab-head"><span class="label">Lampiran A</span><h2>Tabel Master Integrasi 3-5-3 (Dari Komponen Mikro hingga Sistem Kapal)</h2><a class="back" href="#atas">↑ kembali ke atas</a></div>
+  <p class="read">Tabel ini menghubungkan <strong>Alat Praktikum Kampus (Arduino/ESP32)</strong> dengan <strong>Perangkat Kapal Niaga Asli</strong> dan <strong>Komponen Elektronik Dasar (IC)</strong> di dalamnya.</p>
+  <div class="scroll"><table class="master">
+    <thead><tr><th>Tahap Alur Kerja</th><th>Peran &amp; Standar Sinyal</th><th>Perangkat Kapal Niaga Asli <small>(Standar IMO/Class)</small></th><th>Padanan Alat Praktikum Kampus <small>(Project Plate)</small></th><th>Komponen Mikro &amp; IC di Dalamnya</th></tr></thead>
+    <tbody id="masterBody"></tbody>
+  </table></div>
+</section>
+
+<!-- LAMPIRAN B -->
+<section class="bab" id="lampiran-b">
+  <div class="bab-head"><span class="label">Lampiran B</span><h2>Lembar Evaluasi Taruna</h2><a class="back" href="#atas">↑ kembali ke atas</a></div>
+  <h3 class="sub3" style="margin-top:0">Lembar Evaluasi Praktikum MET-353</h3>
+  <div class="tool">
+    <div class="fields">
+      <label for="s-nama">Nama taruna<input id="s-nama" type="text" autocomplete="off"></label>
+      <label for="s-nit">NIT/NIM<input id="s-nit" type="text" autocomplete="off"></label>
+      <label for="s-kelas">Kelas<input id="s-kelas" type="text" autocomplete="off"></label>
+      <label for="s-tgl">Tanggal<input id="s-tgl" type="date"></label>
+      <label for="s-judul">Judul praktikum<input id="s-judul" type="text" autocomplete="off"></label>
+      <label for="s-plate">Project plate/panel<input id="s-plate" type="text" autocomplete="off"></label>
+    </div>
+    <p style="color:var(--muted);margin:0">Beri skor 0–4 untuk setiap aspek (rubrik ada di Lampiran C).</p>
+    <div class="scoregrid" id="scoreGrid"></div>
+    <div class="readout">
+      <div><div class="v" id="sTotal">0 / 40</div><div class="l">Total skor</div></div>
+      <div><div class="v" id="sFinal">–</div><div class="l">Nilai akhir (skala 100)</div></div>
+    </div>
+    <div class="btnrow"><button class="btn" type="button" id="scCopy">Salin hasil evaluasi</button></div>
+    <div class="status" id="scMsg" hidden></div>
+    <textarea class="copyout" id="scOut" readonly hidden aria-label="Hasil evaluasi"></textarea>
+  </div>
+
+  <h3 class="sub3">Kuis Evaluasi Mandiri</h3>
+  <p class="read">Sepuluh soal pilihan ganda. Setiap jawaban langsung diberi penjelasan.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score">Skor: 0 / 10</div>
+  <div class="btnrow"><button class="btn" id="quizReset" type="button">Ulangi kuis</button></div>
+</section>
+
+<!-- LAMPIRAN C -->
+<section class="bab" id="lampiran-c">
+  <div class="bab-head"><span class="label">Lampiran C</span><h2>Rubrik Penilaian</h2><a class="back" href="#atas">↑ kembali ke atas</a></div>
+  <div class="scroll"><table class="tbl" style="min-width:520px">
+    <thead><tr><th>Skor</th><th>Kriteria</th></tr></thead>
+    <tbody>
+      <tr><td class="k">4</td><td>Mampu menjelaskan, mengukur, mendiagnosis, dan memperbaiki dengan mandiri serta aman</td></tr>
+      <tr><td class="k">3</td><td>Mampu melakukan dengan sedikit bimbingan</td></tr>
+      <tr><td class="k">2</td><td>Mampu melakukan sebagian, masih perlu arahan</td></tr>
+      <tr><td class="k">1</td><td>Hanya mengenali gejala, belum mampu melacak alur</td></tr>
+      <tr><td class="k">0</td><td>Tidak melakukan atau melanggar prosedur keselamatan</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- LAMPIRAN D -->
+<section class="bab" id="lampiran-d">
+  <div class="bab-head"><span class="label">Lampiran D</span><h2>Format Laporan Praktikum</h2><a class="back" href="#atas">↑ kembali ke atas</a></div>
+  <ol class="num"><li>Judul Praktikum</li><li>Tujuan</li><li>Alat dan Bahan</li><li>Diagram Rangkaian</li><li>Dasar Teori Ringkas</li><li>Langkah Kerja</li><li>Data Pengukuran</li><li>Analisis 3-5-3</li><li>Fault Injection dan Hasil</li><li>Kesimpulan</li><li>Lampiran Foto/Video</li></ol>
+</section>
+
+<!-- LAMPIRAN E -->
+<section class="bab" id="lampiran-e">
+  <div class="bab-head"><span class="label">Lampiran E</span><h2>Glosarium</h2><a class="back" href="#atas">↑ kembali ke atas</a></div>
+  <div class="fields" style="grid-template-columns:minmax(0,420px)"><label for="glq">Cari istilah<input class="search" id="glq" type="text" placeholder="contoh: VFD" autocomplete="off"></label></div>
+  <dl class="gl" id="gl"></dl>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><strong>Smartbook MET-353 · Marine Electro-Technology 3-5-3</strong><br><span>Edisi 1 · 2026 · Rafael Sukirno, CE</span></div>
+    <small>Buku pembelajaran. Bukan pengganti peraturan, gambar desain yang disetujui, manual pabrikan, prosedur keselamatan kapal, atau sertifikasi kompetensi. <a href="#atas">Kembali ke atas</a></small>
+  </div>
+</footer>
+
+<script>
+/* Tautan pencarian: setiap tautan membuka hasil pencarian di situs tujuan */
+function enc(s){return encodeURIComponent(s)}
+function srcLinks(topic,compact,wikiQ){
+  var t=enc(topic),w=enc(wikiQ||topic);
+  var L=[
+   ["Google","https://www.google.com/search?q="+t],
+   ["Gambar","https://www.google.com/search?tbm=isch&amp;q="+t],
+   ["Video YouTube","https://www.youtube.com/results?search_query="+t],
+   ["Animasi","https://www.youtube.com/results?search_query="+enc(topic+" animation")],
+   ["Pinterest","https://www.pinterest.com/search/pins/?q="+t],
+   ["Wikipedia","https://id.wikipedia.org/w/index.php?search="+w],
+   ["Jurnal","https://scholar.google.com/scholar?q="+t]
+  ];
+  if(compact)L=[L[0],L[1],L[2],L[5]];
+  return '<div class="lk">'+L.map(function(x){return '<a href="'+x[1]+'" target="_blank" rel="noopener noreferrer">'+x[0]+'</a>'}).join("")+'</div>';
+}
+var STQ=["industrial sensor transmitter RTD PT100 4-20 mA","RS-485 Modbus CAN bus industrial communication","PLC programmable logic controller marine automation","marine MCC contactor VFD motor starter","HMI SCADA alarm monitoring system ship"];
+var NAV=[
+ ["pengantar","Awal","Kata Pengantar & Cara Menggunakan"],
+ ["bab1","Bab 1","Evolusi Elektronika Kapal Menuju Maritime 5.0"],
+ ["bab2","Bab 2","Filosofi Arsitektur MET-353"],
+ ["bab3","Bab 3","Lapisan Mikro ke Sistemik"],
+ ["bab4","Bab 4","Elektronika Daya dan MCC Box"],
+ ["bab5","Bab 5","Navigasi, GMDSS, Hazardous Area, dan Cyber Security"],
+ ["bab6","Bab 6","Troubleshooting dan Fault Injection"],
+ ["bab7","Bab 7","Masa Depan MET-353 di Era Maritime 5.0"],
+ ["lampiran-a","Lamp. A","Tabel Master Integrasi 3-5-3"],
+ ["lampiran-b","Lamp. B","Lembar Evaluasi Taruna"],
+ ["lampiran-c","Lamp. C","Rubrik Penilaian"],
+ ["lampiran-d","Lamp. D","Format Laporan Praktikum"],
+ ["lampiran-e","Lamp. E","Glosarium"]
+];
+var RES={
+ pengantar:[["Peran Electro-Technical Officer (ETO)","Electro-Technical Officer ETO ship","Electro-technical officer"],["STCW dan kompetensi ETO","STCW Regulation III/6 electro-technical officer","STCW"]],
+ bab1:[["Maritime 4.0 dan Maritime 5.0","Maritime 5.0 smart shipping","Kapal pintar"],["Sistem otomasi kapal","ship automation system engine control room","Otomasi"],["Kapal konvensional ke kapal pintar","smart ship technology evolution","Kapal"]],
+ bab2:[["Sinyal 4–20 mA","4-20 mA current loop","Arus loop 4–20 mA"],["Marine PLC","marine PLC ship automation","Programmable logic controller"],["Overspeed trip dan Emergency stop","marine engine overspeed trip emergency stop","Tombol berhenti darurat"],["Redundansi catu daya 24V DC","redundant 24V DC power supply","Redundansi"]],
+ bab3:[["Arduino","Arduino microcontroller tutorial","Arduino"],["ESP32","ESP32 IoT tutorial","ESP32"],["Optocoupler","optocoupler isolation","Optocoupler"],["Modbus dan RS-485","Modbus RTU RS-485","Modbus"],["CAN Bus","CAN bus protocol","CAN bus"]],
+ bab4:[["MCC (Motor Control Centre)","motor control centre marine","Motor control center"],["VFD (Variable Frequency Drive)","variable frequency drive","Variable-frequency drive"],["Soft starter","soft starter motor","Soft starter"],["LOTO (Lock Out, Tag Out)","lockout tagout electrical safety","Lockout-tagout"]],
+ bab5:[["GMDSS","GMDSS","GMDSS"],["ECDIS","ECDIS","ECDIS"],["Hazardous area dan Intrinsically Safe","intrinsically safe zener barrier hazardous area","Keselamatan intrinsik"],["Cyber security kapal","maritime cyber security IMO","Keamanan siber"]],
+ bab6:[["Troubleshooting sistem kontrol","control system troubleshooting","Pemecahan masalah"],["Fault injection","fault injection","Fault injection"],["Pengukuran loop 4–20 mA","4-20 mA loop troubleshooting","Arus loop 4–20 mA"]],
+ bab7:[["Digital twin kapal","digital twin ship","Kembaran digital"],["Kapal otonom (MASS)","Maritime Autonomous Surface Ships IMO","Kapal otonom"],["EEXI dan CII","IMO EEXI CII","Energy Efficiency Existing Ship Index"],["Hybrid propulsion","ship hybrid propulsion battery","Kapal hibrida"]],
+ "lampiran-a":[["Instrumentasi kapal: RTD PT100 dan transmitter","marine instrumentation RTD PT100 transmitter","Termometer resistansi"]]
+};
+(function ui(){
+  var root=document.documentElement;
+  /* Bilah bab dan popup daftar isi */
+  var cn=document.getElementById("chapnav");
+  cn.innerHTML=NAV.map(function(n){return '<a href="#'+n[0]+'">'+esc(n[1])+'</a>'}).join("");
+  document.getElementById("tocList").innerHTML=NAV.map(function(n){return '<a href="#'+n[0]+'"><span class="k">'+esc(n[1]).toUpperCase()+'</span><span class="t">'+esc(n[2])+'</span></a>'}).join("");
+  /* Popup sumber belajar */
+  var sl=document.getElementById("srcList"),html="";
+  NAV.forEach(function(n){
+    var r=RES[n[0]];if(!r)return;
+    html+='<div class="pop-sec"><h3>'+esc(n[1])+' · '+esc(n[2])+'</h3>'+r.map(function(x){return '<div class="restopic"><b>'+esc(x[0])+'</b>'+srcLinks(x[1],false,x[2])+'</div>'}).join("")+'</div>';
+  });
+  sl.innerHTML=html;
+  /* Blok sumber belajar di akhir setiap bab */
+  Object.keys(RES).forEach(function(id){
+    var sec=document.getElementById(id);if(!sec)return;
+    var d=document.createElement("div");d.className="res";
+    d.innerHTML='<span class="label">Sumber belajar · foto, video, animasi, literatur</span>'+RES[id].map(function(x){return '<div class="restopic"><b>'+esc(x[0])+'</b>'+srcLinks(x[1],false,x[2])+'</div>'}).join("")+'<p class="resnote">Tautan membuka hasil pencarian di situs tujuan pada tab baru. Pilih sumber tepercaya (standar, produsen, lembaga resmi, jurnal) dan periksa tanggal terbitnya.</p>';
+    sec.appendChild(d);
+  });
+  /* Buka dan tutup popup */
+  var pops=[["btnToc","popToc"],["btnSrc","popSrc"]];
+  function openPop(p,btn){p.hidden=false;p._from=btn;document.body.style.overflow="hidden";var c=p.querySelector("[data-close]");if(c)c.focus()}
+  function closePop(p){if(p.hidden)return;p.hidden=true;document.body.style.overflow="";if(p._from&&p._from.focus)p._from.focus()}
+  pops.forEach(function(x){
+    var b=document.getElementById(x[0]),p=document.getElementById(x[1]);
+    b.addEventListener("click",function(){openPop(p,b)});
+    p.addEventListener("click",function(e){
+      var a=e.target.closest("a");
+      if(e.target===p||e.target.hasAttribute("data-close")||(a&&(a.getAttribute("href")||"").charAt(0)==="#")){p._from=null;closePop(p)}
+    });
+  });
+  document.addEventListener("keydown",function(e){if(e.key==="Escape")pops.forEach(function(x){closePop(document.getElementById(x[1]))})});
+  /* Mode terang / gelap */
+  var M=[["auto","Otomatis"],["light","Terang"],["dark","Gelap"]],tb=document.getElementById("btnTheme");
+  function cur(){var t=root.getAttribute("data-theme");return t==="light"||t==="dark"?t:"auto"}
+  function label(){var m=cur(),nm=M.filter(function(x){return x[0]===m})[0][1];tb.textContent="Mode: "+nm;tb.setAttribute("aria-label","Ganti mode tampilan, sekarang "+nm)}
+  try{var sv=localStorage.getItem("met353-mode");if(sv==="light"||sv==="dark")root.setAttribute("data-theme",sv)}catch(e){}
+  label();
+  tb.addEventListener("click",function(){
+    var i=0;M.forEach(function(x,k){if(x[0]===cur())i=k});
+    var nx=M[(i+1)%M.length][0];
+    if(nx==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",nx);
+    try{localStorage.setItem("met353-mode",nx)}catch(e){}
+    label();
+  });
+  /* Penanda bab aktif */
+  try{
+    var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){Array.prototype.forEach.call(cn.children,function(a){var on=a.getAttribute("href")==="#"+en.target.id;a.classList.toggle("on",on);if(on&&a.scrollIntoView&&cn.scrollWidth>cn.clientWidth){cn.scrollLeft=a.offsetLeft-cn.clientWidth/3}})}})},{rootMargin:"-25% 0px -65% 0px"});
+    NAV.forEach(function(n){var s=document.getElementById(n[0]);if(s)io.observe(s)});
+  }catch(e){}
+})();
+
+var STAGES=[
+{n:1,k:"SENSING",s:"Indra Kapal",
+ role:"Mengubah besaran fisik (suhu, tekanan, level, putaran) menjadi sinyal listrik standar 4–20 mA atau kontak sakelar. (Dilengkapi Zener Barrier untuk area berbahaya/tanker).",
+ ship:["RTD PT100 & Thermocouple","Pressure Transmitter","Magnetic Pickup (RPM)","Oil Mist Detector (OMD)","Fire & Gas Detector"],
+ campus:["Sensor Suhu DS18B20 / NTC / PT100","Potensiometer (simulasi 4–20 mA)","Limit Switch & Float Switch","Sensor Ultrasonik / IR"],
+ micro:["IC Op-Amp (LM358 / TL072) untuk penguat sinyal lemah","Jembatan Wheatstone","Filter RC (anti-noise)"],
+ ex:"Suhu air pendingin mesin induk naik. Sensor PT100 mengubah panas menjadi sinyal listrik (misalnya 4–20 mA lewat transmitter).",
+ chk:"Ukur keluaran sensor: arus loop 4–20 mA atau status kontak."},
+{n:2,k:"COMMUNICATION",s:"Jaringan Saraf",
+ role:"Mengirim data dari kamar mesin ke ruang kontrol dengan aman tanpa gangguan interferensi elektromagnetik (EMC).",
+ ship:["Kabel Twisted Pair Shielded","Protokol Modbus RTU/TCP, RS-485, CAN Bus, NMEA 0183/2000, Ethernet"],
+ campus:["Kabel Jumper & Twisted Pair","Modul MAX485 (RS-485)","Modul MCP2515 (CAN Bus)","Komunikasi Serial UART / I2C / SPI"],
+ micro:["IC Transceiver (MAX485)","Optocoupler (isolator optik pelindung PLC)","Dioda TVS (pelindung lonjakan)"],
+ ex:"Data suhu berjalan dari kamar mesin ke ruang kontrol lewat kabel twisted pair berpelindung agar tidak terganggu interferensi elektromagnetik.",
+ chk:"Periksa kabel bus: sambungan, shield, dan indikator komunikasi."},
+{n:3,k:"PROCESSING",s:"Otak Pemroses",
+ role:"Membaca sinyal masukan, menghitung logika kontrol, menyimpan program, dan mengambil keputusan otomatis.",
+ ship:["Marine PLC (Kongsberg, Siemens, Rolls-Royce, Wärtsilä)","Genset Controller (ComAp/DSE)","Komputer Navigasi (ECDIS/Radar)"],
+ campus:["Arduino Uno / Mega (simulasi logika PLC)","ESP32 (simulasi PLC + IoT)","Raspberry Pi (simulasi komputer kapal)"],
+ micro:["IC ADC (pengubah sinyal analog ke digital)","CPU, RAM, EPROM/EEPROM (penyimpan program permanen)","Logika CMOS, TTL, & ECL"],
+ ex:"PLC membandingkan suhu terbaca dengan batas yang diprogram. Bila terlampaui, PLC memutuskan: bunyikan alarm dan nyalakan pompa standby.",
+ chk:"Periksa input/output PLC (atau Arduino/ESP32 di project plate): sinyal masuk terbaca, perintah keluar terkirim."},
+{n:4,k:"ACTUATION & POWER",s:"Otot & Kawin MCC",
+ role:"Menjembatani sinyal kontrol arus lemah (24V DC) dengan penggerak arus kuat (440V AC) di dalam MCC Box.",
+ ship:["Control Relay & Solenoid Valve","MCC Box: Magnetic Contactor, Soft Starter, VFD / Inverter, AVR Generator, dan sistem High Voltage (HV)"],
+ campus:["Modul Relay 5V/24V","Modul Driver MOSFET IRF540","Motor DC / Servo (simulasi katup)","Mini Inverter / Dimmer AC"],
+ micro:["MOSFET (sakelar cepat di kartu output PLC)","Thyristor / SCR (di dalam Soft Starter)","IGBT & Dioda (di dalam VFD MCC Box)"],
+ ex:"Perintah 24V DC dari PLC menarik kontaktor di MCC Box, sehingga pompa standby berjalan dengan daya 440V AC.",
+ chk:"Periksa driver MOSFET, relay, kontaktor, atau VFD: perintah diterima dan motor mendapat daya."},
+{n:5,k:"INTERFACE & FLEET",s:"Wajah & Cyber Security",
+ role:"Menampilkan kondisi mesin secara visual ke masinis, mengirim data ke darat, serta melindungi jaringan dari serangan siber.",
+ ship:["Layar HMI lokal & SCADA di Engine Control Room (ECR)","Alarm Monitoring System (AMS)","Satelit VSAT/Inmarsat & Maritime Firewall"],
+ campus:["Layar LCD I2C / OLED","Layar sentuh Nextion HMI","Dashboard Web / Blynk via Wi-Fi ESP32"],
+ micro:["Microprocessor Grafis","Flash Memory (Data Logger)","Chip Wi-Fi / Ethernet & Hardware Firewall"],
+ ex:"Alarm tampil di layar ECR, masinis melihat status pompa, dan data dapat dikirim ke darat lewat satelit.",
+ chk:"Periksa tampilan HMI/SCADA: nilai, alarm, dan status sesuai kondisi nyata di lapangan."}
+];
+function li(a){return a.map(function(x){return "<li>"+x+"</li>"}).join("")}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+
+(function stages(){
+  var tabs=document.getElementById("stageTabs"),panel=document.getElementById("stagePanel"),body=document.getElementById("masterBody");
+  tabs.innerHTML=STAGES.map(function(s,i){return '<button class="stagebtn" role="tab" type="button" id="tab'+i+'" data-i="'+i+'" aria-selected="'+(i===0)+'"><span class="n">TAHAP '+s.n+'</span><span class="nm">'+esc(s.k)+'</span><span class="sb">'+esc(s.s)+'</span></button>'}).join("");
+  function show(i){
+    var s=STAGES[i];
+    Array.prototype.forEach.call(tabs.children,function(b,j){b.setAttribute("aria-selected",String(j===i))});
+    panel.setAttribute("aria-labelledby","tab"+i);
+    panel.innerHTML='<h3>'+s.n+'. '+esc(s.k)+'<small>('+esc(s.s)+')</small></h3><p class="role">'+s.role+'</p>'+
+      '<div class="cols3"><div class="col"><h4>Perangkat Kapal Niaga Asli</h4><ul>'+li(s.ship)+'</ul></div><div class="col"><h4>Padanan Alat Praktikum Kampus</h4><ul>'+li(s.campus)+'</ul></div><div class="col"><h4>Komponen Mikro &amp; IC di Dalamnya</h4><ul>'+li(s.micro)+'</ul></div></div>'+
+      '<div class="rowtwo"><div><span class="label">Contoh kejadian</span>'+s.ex+'</div><div><span class="label">Titik periksa (Bab 6, langkah 2)</span>'+s.chk+'</div></div>'+'<div class="restopic" style="margin-top:14px"><b>Cari lebih lanjut tentang tahap ini</b>'+srcLinks(STQ[i],false)+'</div>';
+  }
+  tabs.addEventListener("click",function(e){var b=e.target.closest(".stagebtn");if(b)show(+b.getAttribute("data-i"))});
+  show(0);
+  body.innerHTML=STAGES.map(function(s){return '<tr><td class="st">'+s.n+'. '+esc(s.k)+'<small>('+esc(s.s)+')</small></td><td>'+s.role+'</td><td><ul>'+li(s.ship)+'</ul></td><td><ul>'+li(s.campus)+'</ul></td><td><ul>'+li(s.micro)+'</ul></td></tr>'}).join("");
+})();
+
+(function calc(){
+  var rmin=document.getElementById("rmin"),rmax=document.getElementById("rmax"),ru=document.getElementById("runit"),mai=document.getElementById("mai"),mas=document.getElementById("mas");
+  var oV=document.getElementById("outVal"),oP=document.getElementById("outPct"),oS=document.getElementById("outStat");
+  function f(n,d){return n.toLocaleString("id-ID",{minimumFractionDigits:d,maximumFractionDigits:d})}
+  function upd(){
+    var lo=parseFloat(rmin.value),hi=parseFloat(rmax.value),ma=parseFloat(mai.value);
+    if(isNaN(lo)||isNaN(hi)||isNaN(ma)){oV.textContent="–";oP.textContent="–";oS.className="status";oS.textContent="Isi semua kolom dengan angka.";return}
+    var pct=(ma-4)/16*100,val=lo+(ma-4)/16*(hi-lo),u=ru.value.trim();
+    oV.textContent=f(val,2)+(u?" "+u:"");oP.textContent=f(pct,1)+" %";
+    if(ma<3.6){oS.className="status bad";oS.textContent="Di bawah sekitar 3,6 mA: arus tidak wajar. Curigai kabel putus atau sensor rusak."}
+    else if(ma>21){oS.className="status bad";oS.textContent="Di atas sekitar 21 mA: arus tidak wajar. Curigai gangguan pada sensor atau loop."}
+    else if(ma<4||ma>20){oS.className="status";oS.textContent="Di luar rentang 4–20 mA, tetapi belum melewati batas gangguan umum. Nilai di luar rentang pengukuran."}
+    else{oS.className="status ok";oS.textContent="Arus normal, di dalam rentang 4–20 mA."}
+  }
+  mas.addEventListener("input",function(){mai.value=mas.value;upd()});
+  mai.addEventListener("input",function(){var v=parseFloat(mai.value);if(!isNaN(v))mas.value=Math.min(24,Math.max(0,v));upd()});
+  [rmin,rmax,ru].forEach(function(e){e.addEventListener("input",upd)});
+  upd();
+})();
+
+(function domains(){
+  var Q=[
+   {t:"Nilai suhu di layar HMI melompat-lompat tidak wajar.",a:0,w:"Gejala di sensor, kabel sinyal, dan pembacaan PLC termasuk Automation & Control."},
+   {t:"VFD pompa trip dan motor tidak berputar.",a:1,w:"VFD berada di MCC Box, wilayah Power Electronics & High Voltage."},
+   {t:"Radar tidak menampilkan target.",a:2,w:"Radar termasuk perangkat wajib SOLAS di Navigation, Radio & Marine Safety."}
+  ];
+  var N=["Domain 1: Automation & Control","Domain 2: Power Electronics & HV","Domain 3: Navigation, Radio & Safety"];
+  var el=document.getElementById("domQ");
+  el.innerHTML=Q.map(function(q,i){return '<div class="qq" data-i="'+i+'"><h4>'+q.t+'</h4><div class="opts-q">'+N.map(function(n,j){return '<button class="optq" type="button" data-j="'+j+'">'+esc(n)+'</button>'}).join("")+'</div><div class="fb"></div></div>'}).join("");
+  el.addEventListener("click",function(e){
+    var b=e.target.closest(".optq");if(!b)return;
+    var box=b.closest(".qq"),q=Q[+box.getAttribute("data-i")],j=+b.getAttribute("data-j");
+    Array.prototype.forEach.call(box.querySelectorAll(".optq"),function(x,k){x.disabled=true;if(k===q.a)x.classList.add("right");else if(k===j)x.classList.add("wrong")});
+    box.querySelector(".fb").innerHTML=(j===q.a?"<b>Tepat.</b> ":"<b>Kurang tepat.</b> ")+esc(q.w);
+  });
+})();
+
+(function sim(){
+  var S=[
+   {n:"Operasi normal",txt:"Mesin berjalan normal dan tidak ada gangguan.",
+    l:[["aktif","AKTIF","PLC membaca sensor dan mengatur mesin secara otomatis."],["siaga","SIAGA","Rangkaian kabel pengaman menunggu kondisi bahaya."],["siaga","SIAGA","Catu daya dan jalur komunikasi cadangan siap."]]},
+   {n:"Tekanan minyak lumas turun",txt:"Tekanan minyak lumas turun di bawah batas normal.",
+    l:[["aktif","AKTIF","PLC menyalakan pompa standby secara otomatis."],["siaga","SIAGA","Pengaman fisik menunggu bila kondisi memburuk."],["siaga","SIAGA","Jalur cadangan tidak diperlukan pada kejadian ini."]]},
+   {n:"PLC mati total atau terbakar",txt:"PLC mati total atau terbakar saat mesin induk melaju melewati batas putaran.",
+    l:[["gagal","GAGAL","Tidak ada perangkat lunak yang berjalan."],["aktif","AKTIF","Overspeed Trip dan Emergency Stop tetap memutus suplai daya dan bahan bakar secara fisik."],["siaga","SIAGA","Jalur cadangan berperan bila sistem tersebut memilikinya."]]},
+   {n:"Catu daya 24V utama gagal",txt:"Salah satu catu daya 24V DC mati.",
+    l:[["aktif","AKTIF","PLC tetap bekerja karena daya tidak terputus."],["siaga","SIAGA","Rangkaian pengaman tetap siap."],["ambil","MENGAMBIL ALIH","Catu daya 24V paralel kedua mengambil alih seketika pada sistem yang dirancang untuk itu (bumpless transfer)."]]}
+  ];
+  var NM=["Jalur 1 · Brain Command","Jalur 2 · Hardwired Loop","Jalur 3 · Dual Path"];
+  var PROC=[
+   ["Sensor mengukur besaran mesin dan mengirim sinyalnya.","PLC membaca nilai dan menjalankan logika program.","Output PLC menggerakkan aktuator lewat driver atau kontaktor.","HMI menampilkan status kepada masinis."],
+   ["Transmitter tekanan mengirim arus yang turun mengikuti tekanan.","PLC membandingkan nilai dengan batas alarm yang diprogram.","PLC memberi perintah start pompa standby lewat output 24V DC.","Kontaktor di MCC Box menarik, lalu pompa standby berjalan dengan daya 440V AC.","HMI dan AMS menampilkan alarm serta status pompa.","Bila tekanan tidak pulih, pengaman fisik bekerja sesuai desain sistem."],
+   ["PLC berhenti memproses, sehingga Jalur 1 tidak tersedia.","Sensor overspeed membuka rangkaian trip secara langsung.","Suplai bahan bakar dan daya terputus secara fisik.","Mesin berhenti ke kondisi aman.","ETO menelusuri penyebab kegagalan PLC dengan empat langkah diagnosis 3-5-3, sesuai wewenang dan prosedur."],
+   ["Salah satu catu daya 24V DC gagal.","Catu daya kedua, yang sudah paralel, menanggung beban.","PLC dan sensor tetap bertenaga tanpa restart.","Alarm kegagalan catu daya muncul di HMI.","ETO mengganti unit yang rusak, lalu memverifikasi kedua jalur catu."]
+  ];
+  var btns=document.getElementById("scnBtns"),txt=document.getElementById("scnText"),lanes=document.getElementById("lanes");
+  btns.innerHTML=S.map(function(s,i){return '<button class="btn" type="button" data-i="'+i+'" aria-pressed="'+(i===0)+'">'+s.n+'</button>'}).join("");
+  function show(i){
+    var s=S[i];
+    Array.prototype.forEach.call(btns.children,function(b,j){b.setAttribute("aria-pressed",String(j===i))});
+    txt.textContent="Kejadian: "+s.txt;
+    document.getElementById("proc").innerHTML='<span class="label">Proses kejadian, langkah demi langkah</span><ol class="num">'+PROC[i].map(function(x){return '<li><span>'+x+'</span></li>'}).join("")+'</ol>';
+    lanes.innerHTML=s.l.map(function(l,k){return '<div class="lane"><div class="nm">'+NM[k]+'</div><span class="badge '+l[0]+'">'+l[1]+'</span><p>'+l[2]+'</p></div>'}).join("");
+  }
+  btns.addEventListener("click",function(e){var b=e.target.closest(".btn");if(b)show(+b.getAttribute("data-i"))});
+  show(0);
+})();
+
+(function checklist(){
+  var fill=document.getElementById("barFill"),txt=document.getElementById("barTxt"),all=document.getElementById("allDone");
+  function upd(){
+    var n=0;
+    for(var i=1;i<=4;i++){var c=document.getElementById("c"+i),ok=c.checked;if(ok)n++;document.getElementById("st"+i).classList.toggle("done",ok)}
+    fill.style.width=(n/4*100)+"%";txt.textContent=n+" / 4 langkah";all.hidden=n<4;all.className="status"+(n===4?" ok":"");
+  }
+  for(var i=1;i<=4;i++)document.getElementById("c"+i).addEventListener("change",upd);
+  upd();
+})();
+
+function copyOut(text,ta,msg){
+  ta.hidden=false;ta.value=text;msg.hidden=false;ta.focus();ta.select();
+  var fallback="Teks sudah dipilih. Salin dengan tekan lama atau Ctrl+C.";
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){msg.textContent="Tersalin ke clipboard."},function(){msg.textContent=fallback});
+      return;
+    }
+  }catch(e){}
+  msg.textContent=fallback;
+}
+function val(id){var e=document.getElementById(id);return e?e.value.trim():""}
+
+(function worksheet(){
+  var F=[["w-gejala","Gejala"],["w-sensor","Pengukuran Sensor"],["w-komun","Komunikasi"],["w-proc","Processing"],["w-act","Actuation"],["w-int","Interface"],["w-hw","Hardwired Loop"],["w-dual","Dual Path"],["w-kes","Kesimpulan"],["w-tind","Tindakan Perbaikan"]];
+  var g=document.getElementById("wsGrid");
+  g.innerHTML=F.map(function(f){return '<label for="'+f[0]+'">'+f[1]+'<textarea id="'+f[0]+'"></textarea></label>'}).join("");
+  document.getElementById("wsCopy").addEventListener("click",function(){
+    var t="LEMBAR KERJA DIAGNOSIS MET-353\n"+
+      "Nama: "+val("w-nama")+"\nTanggal: "+val("w-tgl")+"\nPanel/Project Plate: "+val("w-panel")+"\nDomain: "+val("w-dom")+"\n"+
+      F.map(function(f){return f[1]+": "+val(f[0])}).join("\n");
+    copyOut(t,document.getElementById("wsOut"),document.getElementById("wsMsg"));
+  });
+})();
+
+(function scoring(){
+  var A=["Identifikasi Domain","Pelacakan 5 Tahap","Pengukuran Sensor/4–20 mA","Pemeriksaan Komunikasi","Analisis Processing","Pemeriksaan Actuation/Power","Verifikasi Hardwired Loop","Verifikasi Dual Path","Keselamatan Kerja","Laporan & Kesimpulan"];
+  var g=document.getElementById("scoreGrid"),tot=document.getElementById("sTotal"),fin=document.getElementById("sFinal");
+  g.innerHTML=A.map(function(a,i){return '<label for="sc'+i+'"><span>'+esc(a)+'</span><select id="sc'+i+'"><option value="">–</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>'}).join("");
+  function calc(){
+    var s=0,n=0;
+    A.forEach(function(a,i){var v=document.getElementById("sc"+i).value;if(v!==""){s+=parseInt(v,10);n++}});
+    tot.textContent=s+" / 40";
+    fin.textContent=n===A.length?(s/40*100).toLocaleString("id-ID",{maximumFractionDigits:1}):"–";
+    return {s:s,n:n};
+  }
+  g.addEventListener("change",calc);
+  document.getElementById("scCopy").addEventListener("click",function(){
+    var r=calc();
+    var t="LEMBAR EVALUASI PRAKTIKUM MET-353\n"+
+      "Nama Taruna: "+val("s-nama")+"\nNIT/NIM: "+val("s-nit")+"\nKelas: "+val("s-kelas")+"\nTanggal: "+val("s-tgl")+"\nJudul Praktikum: "+val("s-judul")+"\nProject Plate/Panel: "+val("s-plate")+"\n\n"+
+      A.map(function(a,i){var v=document.getElementById("sc"+i).value;return a+": "+(v===""?"-":v)}).join("\n")+
+      "\n\nTotal Skor: "+r.s+" / 40\nNilai Akhir: "+fin.textContent;
+    copyOut(t,document.getElementById("scOut"),document.getElementById("scMsg"));
+  });
+})();
+
+(function quiz(){
+  var Q=[
+   {q:"Apa urutan 5 tahap alur kerja MET-353?",o:["Sensing → Communication → Processing → Actuation & Power → Interface & Fleet","Processing → Sensing → Interface & Fleet → Communication → Actuation & Power","Sensing → Processing → Communication → Interface & Fleet → Actuation & Power"],a:0,e:"Sinyal mulai dari sensor, dikirim lewat bus, diproses, menggerakkan aktuator, lalu ditampilkan."},
+   {q:"Sinyal listrik standar dari sensor kapal adalah…",o:["0–5 V AC","4–20 mA","110–220 V DC"],a:1,e:"Sensor mengirim sinyal standar 4–20 mA atau kontak sakelar."},
+   {q:"Mengapa papan Arduino terbuka dilarang dipasang di kamar mesin kapal niaga?",o:["Harganya terlalu murah","Tidak memenuhi sertifikasi Marine Class (BKI, DNV, Lloyd's)","Tidak punya chip mikrokontroler"],a:1,e:"Chip mikrokontroler yang sama justru tertanam sebagai embedded system di perangkat bersertifikat."},
+   {q:"Tombol Emergency Stop dan Overspeed Trip termasuk jalur…",o:["Brain Command","Hardwired Loop","Dual Path / Redundancy"],a:1,e:"Keduanya berupa kabel tembaga langsung yang memotong jalur PLC."},
+   {q:"PLC mati total saat mesin induk overspeed. Apa yang tetap bekerja?",o:["Jalur Hardwired Loop yang memutus suplai daya dan bahan bakar","Program di dalam PLC","Dashboard web di ESP32"],a:0,e:"Hardwired Loop bekerja tanpa prosesor, jadi tetap aktif walau PLC mati."},
+   {q:"Dua catu daya 24V DC paralel dan dua jalur CAN Bus (A & B) adalah contoh jalur…",o:["Brain Command","Hardwired Loop","Dual Path / Redundancy"],a:2,e:"Sistem cadangan berlapis yang mengambil alih bila jalur utama gagal."},
+   {q:"VFD, Soft Starter, AVR, Rectifier, dan UPS termasuk domain…",o:["Domain 1: Automation & Control","Domain 2: Power Electronics & High Voltage","Domain 3: Navigation, Radio & Marine Safety"],a:1,e:"Domain 2 adalah titik pertemuan sinyal kontrol dengan MCC Box dan Main Switchboard."},
+   {q:"Apa langkah pertama dari 4 Langkah Diagnosis 3-5-3?",o:["Verifikasi jalur cadangan","Tentukan domainnya","Lacak 5 tahap alurnya"],a:1,e:"Mulai dengan menentukan domain: Automation, Power Electronics, atau Navigation/Safety."},
+   {q:"Di area tanker, Zener Barrier dan isolator dipakai untuk…",o:["Membatasi energi listrik agar tidak memicu ledakan","Menaikkan tegangan sensor","Menggantikan fungsi PLC"],a:0,e:"Peralatan harus Ex-proof atau Intrinsically Safe, dengan energi yang dibatasi."},
+   {q:"Arduino/ESP32 di laboratorium boleh dihubungkan langsung ke…",o:["Panel 440 VAC kapal","Catu tegangan rendah terisolasi dengan fuse dan driver yang sesuai","Jaringan OT kapal yang sedang aktif"],a:1,e:"Arduino/ESP32 adalah alat pendidikan. Jangan hubungkan langsung ke 220/380/440 VAC atau sistem kapal."}
+  ];
+  var el=document.getElementById("quiz"),sc=document.getElementById("score"),correct=0,done=0;
+  function build(){
+    correct=0;done=0;sc.textContent="Skor: 0 / "+Q.length;
+    el.innerHTML=Q.map(function(q,i){return '<div class="qq" data-i="'+i+'"><h4><span>'+(i+1)+'.</span>'+esc(q.q)+'</h4><div class="opts-q">'+q.o.map(function(o,j){return '<button class="optq" type="button" data-j="'+j+'">'+esc(o)+'</button>'}).join("")+'</div><div class="fb"></div></div>'}).join("");
+  }
+  el.addEventListener("click",function(e){
+    var b=e.target.closest(".optq");if(!b)return;
+    var box=b.closest(".qq"),q=Q[+box.getAttribute("data-i")],j=+b.getAttribute("data-j");
+    Array.prototype.forEach.call(box.querySelectorAll(".optq"),function(x,k){x.disabled=true;if(k===q.a)x.classList.add("right");else if(k===j)x.classList.add("wrong")});
+    var ok=j===q.a;if(ok)correct++;done++;
+    box.querySelector(".fb").innerHTML=(ok?"<b>Benar.</b> ":"<b>Kurang tepat.</b> ")+esc(q.e);
+    sc.textContent="Skor: "+correct+" / "+Q.length+(done===Q.length?" · selesai":"");
+  });
+  document.getElementById("quizReset").addEventListener("click",build);
+  build();
+})();
+
+(function glossary(){
+  var G=[
+   ["ADC","Analog-to-Digital Converter. Mengubah sinyal analog sensor menjadi angka digital."],
+   ["AIS","Automatic Identification System. Sistem pertukaran identitas dan posisi antar kapal."],
+   ["AMS","Alarm Monitoring System. Memantau dan menampilkan alarm mesin."],
+   ["AVR","Automatic Voltage Regulator. Menjaga tegangan keluaran generator tetap stabil."],
+   ["Bumpless transfer","Peralihan ke jalur cadangan tanpa lonjakan atau terputusnya operasi."],
+   ["CAN Bus","Jaringan komunikasi dua kabel yang tahan gangguan, umum dipakai pada mesin dan perangkat kontrol."],
+   ["Class (BKI, DNV, Lloyd's)","Badan klasifikasi yang menyertifikasi desain dan peralatan kapal."],
+   ["Common-cause failure","Kegagalan bersama pada dua jalur atau lebih karena berbagi sumber daya, kabel, lokasi, atau jaringan yang sama."],
+   ["Digital Twin","Kembaran digital dari mesin atau kapal untuk memantau dan memprediksi kondisinya."],
+   ["ECDIS","Electronic Chart Display and Information System. Peta navigasi elektronik."],
+   ["ECR","Engine Control Room. Ruang kontrol mesin."],
+   ["EEXI / CII","Aturan IMO tentang efisiensi energi kapal (EEXI) dan intensitas karbon operasional (CII)."],
+   ["EMC","Electromagnetic Compatibility. Kemampuan perangkat bekerja tanpa mengganggu atau terganggu interferensi elektromagnetik."],
+   ["Embedded System","Sistem komputer mikro yang tertanam di dalam suatu perangkat untuk satu fungsi khusus."],
+   ["EPIRB","Emergency Position Indicating Radio Beacon. Pemancar darurat penanda posisi."],
+   ["ETO","Electro-Technical Officer. Perwira elektro-teknik kapal."],
+   ["Ex-proof","Peralatan tahan ledakan untuk area berbahaya."],
+   ["Fault Injection","Penyuntikan gangguan terkontrol pada trainer untuk melatih diagnosis."],
+   ["GMDSS","Global Maritime Distress and Safety System. Sistem komunikasi darurat dan keselamatan maritim."],
+   ["GNSS","Global Navigation Satellite System. Sistem penentuan posisi satelit, termasuk GPS."],
+   ["Gyrocompass","Kompas yang menunjuk utara sejati memakai giroskop."],
+   ["Hardwired Loop","Jalur kabel fisik darurat tanpa prosesor untuk fungsi pengamanan."],
+   ["HMI","Human Machine Interface. Layar tempat operator melihat dan mengendalikan mesin."],
+   ["Human-in-the-Loop","Manusia tetap memegang kendali akhir dalam sistem otomatis."],
+   ["IGBT","Insulated Gate Bipolar Transistor. Sakelar daya di dalam VFD."],
+   ["IMO","International Maritime Organization. Badan PBB untuk pelayaran."],
+   ["Intrinsically Safe","Rangkaian yang energinya dibatasi agar aman di area berbahaya."],
+   ["LOTO","Lock Out, Tag Out. Prosedur mengunci dan menandai sumber energi sebelum bekerja."],
+   ["MASS","Maritime Autonomous Surface Ships. Kapal permukaan otonom."],
+   ["MCC","Motor Control Centre. Panel pengendali motor-motor kapal."],
+   ["Modbus","Protokol komunikasi industri; tersedia versi RTU (serial) dan TCP (Ethernet)."],
+   ["MOSFET","Transistor sakelar elektronik cepat, dipakai pada kartu output PLC dan modul driver."],
+   ["NMEA 0183/2000","Standar komunikasi antar perangkat elektronik navigasi kapal."],
+   ["OMD","Oil Mist Detector. Mendeteksi kabut minyak berbahaya di dalam mesin."],
+   ["Optocoupler","Isolator optik: meneruskan sinyal lewat cahaya agar sirkuit terpisah secara listrik."],
+   ["OT / ICS","Operational Technology / Industrial Control Systems. Sistem yang mengendalikan proses fisik."],
+   ["PLC","Programmable Logic Controller. Pengendali berprogram untuk otomasi mesin."],
+   ["PMS","Power Management System. Mengatur pembagian daya dan generator."],
+   ["RS-485","Standar komunikasi serial dua kawat untuk jarak jauh dan banyak perangkat."],
+   ["RTD PT100","Sensor suhu dari platina yang resistansinya 100 Ω pada 0 °C."],
+   ["SART","Search and Rescue Transponder. Pemancar penanda posisi untuk radar."],
+   ["SCADA","Sistem pemantauan dan kendali terpusat."],
+   ["SCR / Thyristor","Sakelar semikonduktor daya, dipakai di dalam Soft Starter."],
+   ["Soft Starter","Menaikkan tegangan motor secara bertahap saat start."],
+   ["SOLAS","Safety of Life at Sea. Konvensi IMO tentang keselamatan jiwa di laut."],
+   ["STCW","Standar internasional IMO untuk pelatihan, sertifikasi, dan dinas jaga pelaut."],
+   ["TVS (dioda)","Transient Voltage Suppressor. Melindungi rangkaian dari lonjakan tegangan."],
+   ["UPS","Uninterruptible Power Supply. Daya cadangan berbaterai."],
+   ["VFD","Variable Frequency Drive. Mengatur kecepatan motor AC dengan mengubah frekuensi dan tegangan."],
+   ["Zener Barrier","Pembatas energi listrik untuk area berbahaya (misalnya kapal tanker) agar tidak memicu ledakan."]
+  ];
+  var dl=document.getElementById("gl"),q=document.getElementById("glq");
+  function draw(){
+    var t=q.value.trim().toLowerCase();
+    var r=G.filter(function(g){return !t||g[0].toLowerCase().indexOf(t)>-1||g[1].toLowerCase().indexOf(t)>-1});
+    dl.innerHTML=r.length?r.map(function(g){return "<dt>"+esc(g[0])+"</dt><dd>"+esc(g[1])+"</dd><dd>"+srcLinks(g[0].split(" (")[0]+" marine engineering",true,g[0].split(" (")[0])+"</dd>"}).join(""):"<dd>Istilah tidak ditemukan.</dd>";
+  }
+  q.addEventListener("input",draw);draw();
+})();
+</script>
+
+</body>
+</html>
